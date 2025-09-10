@@ -1,0 +1,237 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import type { QuizItem } from "@/core/repositroy/questions/question.type";
+import WaitingQuestionPage from '@/app/quiz/components/WaitingQuestion';
+import QuestionResultPage from '@/app/quiz/components/QuestionResult';
+import QuestionCompletePage from '@/app/quiz/components/QuestionComplete';
+
+// 난이도 라벨 매핑 (1~5)
+const difficultyLabel = (d: number) => {
+    switch (d) {
+        case 1: return '입문';
+        case 2: return '쉬움';
+        case 3: return '보통';
+        case 4: return '어려움';
+        case 5: return '전문';
+        default: return '보통';
+    }
+};
+
+/**
+ * @param quizQuestions 문제와 보기 목록 
+ * @param difficulty 난이도 ( 1 ~ 5 )
+ */
+export default function QuizPlayPage(
+    { quizQuestions, difficulty }: { quizQuestions: QuizItem[], difficulty: number }
+) {
+    const router = useRouter();
+
+    // 문제와 보기 목록 데이터
+    const [quizData, setQuizData] = useState<QuizItem[]>([]);
+    const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+    const [showResult, setShowResult] = useState<boolean>(false);
+    const [score, setScore] = useState<number>(0);
+    const [timeLeft, setTimeLeft] = useState<number>(30);
+    const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
+
+    useEffect(() => {
+        setQuizData(quizQuestions ?? []);
+        setCurrentQuestion(0);
+        setSelectedAnswer(null);
+        setShowResult(false);
+        setScore(0);
+        setTimeLeft(30);
+        setQuizCompleted(false);
+    }, [quizQuestions]);
+
+    const categoryInfo = {
+        name: "퀴즈",
+        icon: "🧩",
+        color: "blue",
+    };
+
+    // 현재 문제
+    const current = quizData[currentQuestion];
+    // 진행률 계산
+    const progress = ((currentQuestion + 1) / quizData.length) * 100;
+
+    // 타이머
+    useEffect(() => {
+        if (timeLeft > 0 && !showResult && !quizCompleted && quizData.length > 0) {
+            const timer = setTimeout(() => setTimeLeft((t) => t - 1), 1000);
+            return () => clearTimeout(timer);
+        } else if (timeLeft === 0 && !showResult) {
+            handleNextQuestion();
+        }
+    }, [timeLeft, showResult, quizCompleted, quizData]);
+
+    // 다음 문제 버튼 이벤트
+    const handleNextQuestion = () => {
+        if (quizData.length === 0 || currentQuestion >= quizData.length) {
+            return
+        };
+
+        const currentQ = quizData[currentQuestion];
+        const correctIdx = currentQ.correctIndex ?? 0;
+        const isCorrect = selectedAnswer === correctIdx;
+
+        if (isCorrect) setScore((s) => s + 1);
+        setShowResult(true);
+    };
+
+    // 정답 확인 페이지에서 결과보기 혹은 다음문제 버튼
+    const handleContinue = () => {
+        if (currentQuestion < quizData.length - 1) {
+            setCurrentQuestion((i) => i + 1);
+            setSelectedAnswer(null);
+            setShowResult(false);
+            setTimeLeft(30);
+        } else {
+            setQuizCompleted(true);
+        }
+    };
+
+    // 문제 다시 풀이 버튼 이벤트
+    const handleRestart = () => {
+        setCurrentQuestion(0);
+        setSelectedAnswer(null);
+        setShowResult(false);
+        setScore(0);
+        setTimeLeft(30);
+        setQuizCompleted(false);
+    };
+
+    // 다른 퀴즈 선택 버튼 이벤트
+    const handleBackToSelection = () => router.push('/categories');
+
+    // 대기 화면
+    if (quizData.length === 0) {
+        return <WaitingQuestionPage />;
+    }
+
+    // 문제 풀이 완료
+    if (quizCompleted) {
+        return (
+            <QuestionCompletePage
+                categoryIcon={categoryInfo.icon}
+                categoryName={categoryInfo.name}
+                score={score}
+                total={quizData.length}
+                difficulty={difficulty}
+                difficultyLabel={difficultyLabel}
+                onRestart={handleRestart}
+                onBackToSelection={handleBackToSelection}
+            />
+        );
+    }
+
+    // 정답 확인 페이지
+    if (showResult) {
+        const current = quizData[currentQuestion];
+        const correctIdx = current.correctIndex ?? 0;
+        const isCorrect = selectedAnswer === correctIdx;
+
+        return (
+            <QuestionResultPage
+                isCorrect={isCorrect}
+                correctText={current.options[correctIdx]}
+                explanation={current.explanation}
+                onContinue={handleContinue}
+                isLastQuestion={currentQuestion >= quizData.length - 1}
+            />
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col">
+            <header className="bg-white shadow-sm border-b border-blue-200 px-4 py-4">
+                <div className="max-w-md mx-auto">
+                    <div className="flex items-center justify-center mb-3">
+                        <span className="text-lg mr-2">{categoryInfo.icon}</span>
+                        <span className="text-sm font-medium text-gray-700">
+                            {categoryInfo.name}
+                        </span>
+
+                        {/* 난이도 배지: 1~5 */}
+                        <span className="ml-2 px-2 py-1 bg-gray-100 rounded text-xs">
+                            난이도 {difficulty} / 5 ({difficultyLabel(difficulty)})
+                        </span>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium text-gray-600">
+                            {currentQuestion + 1} / {quizData.length}
+                        </span>
+                        <span className="text-sm font-medium text-blue-600">
+                            ⏰ {timeLeft}초
+                        </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+                </div>
+            </header>
+
+            <main className="flex-1 flex items-center justify-center px-4 py-8">
+                <div className="max-w-md w-full">
+                    <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
+                        <div className="text-center mb-6">
+                            <div className="text-4xl mb-4">{categoryInfo.icon}</div>
+                            <h2 className="text-lg font-bold text-blue-900 leading-relaxed">
+                                {current.question}
+                            </h2>
+                        </div>
+
+                        <div className="space-y-3">
+                            {current.options.map((option, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setSelectedAnswer(index)}
+                                    className={`w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ${selectedAnswer === index
+                                        ? 'border-blue-500 bg-blue-50 text-blue-900'
+                                        : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50'
+                                        }`}
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <div
+                                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedAnswer === index ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
+                                                }`}
+                                        >
+                                            {selectedAnswer === index && (
+                                                <div className="w-2 h-2 rounded-full bg-white" />
+                                            )}
+                                        </div>
+                                        <span className="font-medium">{option}</span>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={handleNextQuestion}
+                        disabled={selectedAnswer === null}
+                        className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${selectedAnswer !== null
+                            ? 'bg-blue-700 hover:bg-blue-800 text-white hover:shadow-lg'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                    >
+                        {currentQuestion === quizData.length - 1 ? "결과 확인" : "다음 문제"}
+                    </button>
+
+                    <div className="text-center mt-4">
+                        <span className="text-sm text-gray-600">
+                            현재 점수: <span className="font-bold text-blue-600">{score}</span>
+                        </span>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}

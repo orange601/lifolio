@@ -1,0 +1,543 @@
+/* quiz/components/QuestionComplete.module.css */
+
+/* 축하 섹션 */
+.celebrationSection {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: celebrationEntry 0.6s ease-out both;
+}
+
+.celebrationIcon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: iconBounce 0.8s ease-out 0.3s both;
+    position: relative;
+    overflow: hidden;
+}
+
+.celebrationIcon::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+.excellent {
+    background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00);
+}
+
+.good {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A, #8BC34A);
+}
+
+.average {
+    background: linear-gradient(135deg, #2196F3, #42A5F5, #64B5F6);
+}
+
+.poor {
+    background: linear-gradient(135deg, #FF9800, #FFB74D, #FFCC02);
+}
+
+.bad {
+    background: linear-gradient(135deg, #f44336, #ef5350, #FF7043);
+}
+
+.celebrationText {
+    animation: textFadeIn 0.6s ease-out 0.5s both;
+}
+
+.resultTitle {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 8px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    letter-spacing: -1px;
+}
+
+.resultSubtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* 메인 점수 카드 */
+.scoreCard {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 28px;
+    padding: 35px 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: cardSlideUp 0.6s ease-out 0.2s both;
+    position: relative;
+    overflow: hidden;
+}
+
+.scoreCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+    background-size: 200% 100%;
+    animation: gradientFlow 3s ease-in-out infinite;
+}
+
+.scoreCircle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.scorePercentage {
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    position: relative;
+}
+
+.percentSymbol {
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.scoreDescription {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 600;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.scoreDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.scoreRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.scoreLabel {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 600;
+}
+
+.scoreValue {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #333;
+}
+
+.correct {
+    color: #4CAF50;
+}
+
+/* 통계 카드들 */
+.statsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+    animation: statsSlideIn 0.6s ease-out 0.4s both;
+}
+
+.statCard {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px 15px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.statCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.statCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.statCard:hover::before {
+    left: 100%;
+}
+
+.statIcon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.statValue {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #667eea;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.statLabel {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 성과 배지 */
+.performanceBadge {
+    text-align: center;
+    margin-bottom: 35px;
+    animation: badgeFadeIn 0.6s ease-out 0.6s both;
+}
+
+.badge {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.badgeExcellent {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+}
+
+.badgeGood {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+}
+
+.badgeAverage {
+    background: linear-gradient(135deg, #2196F3, #42A5F5);
+}
+
+.badgePoor {
+    background: linear-gradient(135deg, #FF9800, #FFB74D);
+}
+
+.badgeBad {
+    background: linear-gradient(135deg, #f44336, #ef5350);
+}
+
+/* 액션 버튼들 */
+.actionButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: buttonsSlideUp 0.6s ease-out 0.8s both;
+}
+
+.actionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px 32px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.actionButton::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.actionButton:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+}
+
+.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 45px rgba(102, 126, 234, 0.4);
+}
+
+.secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+}
+
+.tertiary {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.tertiary:hover {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+}
+
+.buttonIcon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.actionButton:hover .buttonIcon {
+    transform: scale(1.1);
+}
+
+/* 동기부여 메시지 */
+.motivationalFooter {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    animation: footerFadeIn 0.6s ease-out 1s both;
+}
+
+.motivationalFooter p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0;
+    font-style: italic;
+}
+
+/* 애니메이션 */
+@keyframes celebrationEntry {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes iconBounce {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-100px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1) translateY(-10px);
+    }
+
+    70% {
+        transform: scale(0.9) translateY(5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes textFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes statsSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes badgeFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes buttonsSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes footerFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}
+
+@keyframes gradientFlow {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* 반응형 디자인 */
+@media (min-width: 768px) {
+    .actionButtons {
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .actionButton {
+        flex: 0 0 auto;
+        min-width: 200px;
+    }
+
+    .statsContainer {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .resultTitle {
+        font-size: 2rem;
+    }
+
+    .scorePercentage {
+        font-size: 3rem;
+    }
+
+    .statsContainer {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .statCard {
+        padding: 20px 15px;
+    }
+
+    .scoreCard {
+        padding: 25px 20px;
+    }
+}

@@ -1,0 +1,34 @@
+import QuizCascader from "@/app/legacy/quiz/components/QuizCascader";
+import { findQuizItems } from "@/core/repositroy/questions/question.repo";
+import { QuizItem } from "@/core/repositroy/questions/question.type";
+
+export default async function QuizPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ categoryId?: string; difficulty?: string }>;
+}) {
+    const params = await searchParams;
+    const categoryId = Number(params?.categoryId ?? NaN);
+    const difficulty = Number(params?.difficulty ?? NaN); // ✅ 1~5 숫자 기대
+
+    const safeDifficulty = normalizeDifficulty(difficulty);
+    const items: QuizItem[] = await findQuizItems(categoryId, safeDifficulty);
+
+    return (
+        <main style={{ padding: 16 }
+        }>
+            <QuizCascader quizQuestions={items} difficulty={safeDifficulty} />
+        </main>
+    );
+}
+
+/**
+ * 유효성 검사 난이도 1 ~ 5 까지
+ */
+function normalizeDifficulty(value: unknown, fallback: number = 3): number {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return fallback;
+    if (n < 1) return 1;
+    if (n > 5) return 5;
+    return n;
+}

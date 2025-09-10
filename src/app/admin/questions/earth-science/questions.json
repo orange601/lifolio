@@ -1,0 +1,1328 @@
+[
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "변성암의 특징으로 옳은 것은?",
+            "explanation": "변성암은 지하 깊은 곳에서 열과 압력을 받아 엽리나 재결정 작용이 나타난다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "퇴적 작용으로 만들어진다",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "마그마가 빠르게 냉각되어 형성된다",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "열과 압력을 받아 엽리가 생긴다",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "표면에서만 생성된다",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "사암이 변성되면 무엇이 되는가?",
+            "explanation": "사암은 변성작용을 받아 규암이 된다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "편마암",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "규암",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "대리암",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "응회암",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "셰일이 변성되는 과정의 올바른 순서는?",
+            "explanation": "셰일은 점판암 → 편암 → 편마암으로 변성된다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "셰일 → 편암 → 규암",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "셰일 → 점판암 → 편암 → 편마암",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "셰일 → 규암 → 대리암",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "셰일 → 녹색편암 → 각섬암",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "풍화작용의 원인으로 옳지 않은 것은?",
+            "explanation": "풍화작용 원인에는 물, 공기, 생물 작용, 온도 변화, 산소 등이 있다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "물이 얼었다 녹았다 하는 작용",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "식물 뿌리의 작용",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "지하수의 용해 작용",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "태양에너지 생성",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "토양이 쌓이는 일반적인 순서는?",
+            "explanation": "토양의 쌓인 순서는 기반암 → 모질물 → 심토 → 표토이다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "기반암 → 모질물 → 심토 → 표토",
+                "is_correct": true,
+                "order_no": 1
+            },
+            {
+                "content": "기반암 → 심토 → 표토 → 모질물",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "표토 → 심토 → 모질물 → 기반암",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "모질물 → 기반암 → 표토 → 심토",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "토양의 생성 순서는?",
+            "explanation": "토양의 생성 순서는 기반암 → 모질물 → 표토 → 심토이다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "기반암 → 모질물 → 표토 → 심토",
+                "is_correct": true,
+                "order_no": 1
+            },
+            {
+                "content": "기반암 → 심토 → 표토 → 모질물",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "표토 → 심토 → 모질물 → 기반암",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "모질물 → 기반암 → 표토 → 심토",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "대륙이동설의 근거가 아닌 것은?",
+            "explanation": "대륙이동설의 근거에는 해안선 모양, 화석 분포, 산맥 분포, 빙하 흔적이 있다.",
+            "difficulty": 3,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "해안선 모양의 일치",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "고생물 화석의 일치",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "빙하 흔적의 일치",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "달의 인력의 차이",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "맨틀대류설을 주장한 학자는 누구인가?",
+            "explanation": "1928년 홈스가 맨틀대류설을 주장하였다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "베게너",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "헤스",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "홈스",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "윌슨",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "해저확장설을 주장한 학자는 누구인가?",
+            "explanation": "1962년 헤스가 해저확장설을 제안하였다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "베게너",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "홈스",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "헤스",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "윌슨",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "해저확장설에서 맨틀의 하강부에 해당하는 지형은?",
+            "explanation": "맨틀의 하강부는 해구이다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "해구",
+                "is_correct": true,
+                "order_no": 1
+            },
+            {
+                "content": "해령",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "산맥",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "열곡",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "규소와 산소가 많을수록 광물의 색은 어떻게 되는가?",
+            "explanation": "산소와 규소가 많을수록 밝은 색을 띠며, 철과 마그네슘이 많을수록 어두워진다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "어두워진다",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "밝아진다",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "색이 없다",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "붉어진다",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "장석의 주요 활용 용도는?",
+            "explanation": "장석은 도자기와 타일 제조에 사용된다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "보석",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "도자기와 타일",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "연필심",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "전극",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "운모의 주요 활용 용도는?",
+            "explanation": "운모는 절연체와 고무 재료로 활용된다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "시멘트",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "절연체와 고무",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "보석",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "유리칼",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "금강석의 주요 활용 용도가 아닌 것은?",
+            "explanation": "금강석은 보석, 유리칼, 연마재로 활용된다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "보석",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "유리칼",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "연마재",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "연필심",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "활석의 주요 활용 용도는?",
+            "explanation": "활석은 화장품 원료로 사용된다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "보석",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "화장품 원료",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "전극",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "타일",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "세 가지 암석의 기본 분류에 포함되지 않는 것은?",
+            "explanation": "암석은 화성암, 퇴적암, 변성암으로 분류된다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "화성암",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "퇴적암",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "변성암",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "화강암",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "화산암과 심성암의 차이로 옳은 것은?",
+            "explanation": "화산암은 빠르게 냉각되어 세립, 심성암은 서서히 냉각되어 조립 구조를 가진다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "화산암은 조립, 심성암은 세립",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "화산암은 빠르게 냉각, 심성암은 서서히 냉각",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "화산암은 지하 깊은 곳, 심성암은 지표",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "둘 다 결정 크기가 같다",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "퇴적암의 형성 과정으로 옳은 순서는?",
+            "explanation": "퇴적암은 침식 → 운반 → 퇴적 → 다져짐·굳어짐 과정을 거친다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "퇴적 → 운반 → 침식 → 굳어짐",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "운반 → 침식 → 퇴적 → 굳어짐",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "침식 → 운반 → 퇴적 → 다져짐·굳어짐",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "운반 → 다져짐 → 퇴적 → 굳어짐",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "퇴적암의 대표적 특징은 무엇인가?",
+            "explanation": "퇴적암에는 층리와 화석이 존재한다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "큰 결정",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "층리와 화석",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "고온 고압 변성",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "빠른 냉각",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "퇴적암이 아닌 것은?",
+            "explanation": "대표적인 퇴적암에는 이암, 셰일, 사암, 역암, 암염, 석회암, 응회암이 있다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "사암",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "셰일",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "화강암",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "석회암",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "지진파 연구로 발견된 경계면이 아닌 것은?",
+            "explanation": "지진파 속도 곡선으로 모호면, 구텐베르크면, 레만면이 발견되었다.",
+            "difficulty": 3,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "모호면",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "구텐베르크면",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "레만면",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "하와이면",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "지각 8대 구성 원소 중 가장 많은 것은?",
+            "explanation": "지각의 8대 원소 중 가장 많은 것은 산소(O)이다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "규소(Si)",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "알루미늄(Al)",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "철(Fe)",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "산소(O)",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "한 가지 원소로만 이루어진 광물이 아닌 것은?",
+            "explanation": "금(Au), 구리(Cu), 금강석(C)은 한 원소로만 구성된 광물이다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "금(Au)",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "구리(Cu)",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "금강석(C)",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "석영(SiO₂)",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "조암광물에 해당하지 않는 것은?",
+            "explanation": "주된 조암광물은 장석, 석영, 휘석, 운모 등이다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "장석",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "석영",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "운모",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "석회암",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "광물의 성질 중 조흔색이란 무엇인가?",
+            "explanation": "조흔색은 조흔판에 그은 광물 가루의 색이다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "광물 표면의 빛 반사",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "광물 덩어리의 전체 색",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "조흔판에 그은 가루 색",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "광물의 결정 구조",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "결정형이 육각기둥인 광물은?",
+            "explanation": "석영은 육각기둥 결정형을 가진다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "흑운모",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "석영",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "방해석",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "금강석",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "쪼개짐이 판상으로 나타나는 광물은?",
+            "explanation": "흑운모는 판상으로 잘 쪼개진다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "석영",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "흑운모",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "감람석",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "흑요석",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "깨짐이 불규칙적으로 일어나는 광물은?",
+            "explanation": "석영, 감람석, 흑요석은 불규칙하게 깨진다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "방해석",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "암염",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "석영",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "흑운모",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "모스 굳기계에서 굳기 10에 해당하는 광물은?",
+            "explanation": "모스 굳기계에서 굳기 10은 금강석이다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "석영",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "정장석",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "금강석",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "강옥",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "방해석에 염산을 가하면 발생하는 기체는?",
+            "explanation": "방해석과 염산 반응 시 이산화탄소가 발생한다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "산소",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "질소",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "이산화탄소",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "수소",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "기권의 주요 기능이 아닌 것은?",
+            "explanation": "기권은 기상현상, 산소와 이산화탄소 공급, 자외선 차단, 기온 유지 기능을 한다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "산소 공급",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "이산화탄소 공급",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "자외선 차단",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "지각의 형성",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "수권의 역할로 옳지 않은 것은?",
+            "explanation": "수권은 바다, 강, 지하수, 빙하를 포함하며 생명의 탄생, 지형 변화, 물 공급에 기여한다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "생명의 탄생",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "지형 변화",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "물을 공급한다",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "태양에너지 발생",
+                "is_correct": true,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "지권의 변화 속도는 다른 지구계에 비해 어떤가?",
+            "explanation": "지권의 변화는 다른 지구계에 비해 가장 느리다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "가장 빠르다",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "보통이다",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "가장 느리다",
+                "is_correct": true,
+                "order_no": 3
+            },
+            {
+                "content": "변화하지 않는다",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "생물권의 특징으로 옳은 것은?",
+            "explanation": "생물권은 인간, 동식물, 미생물이 사는 곳으로 다른 행성에는 없다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "지구 내부의 금속층",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "인간과 동식물이 사는 곳",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "1000 km 두께",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "태양에너지 발생",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "탄소의 순환은 무엇을 동반하는가?",
+            "explanation": "탄소의 순환은 지구계를 돌며 에너지의 순환도 함께 일어난다.",
+            "difficulty": 1,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "중력의 변화",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "에너지의 순환",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "태양의 생성",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "산맥의 형성",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "지구계의 한 요소가 변하면 어떤 일이 일어나는가?",
+            "explanation": "지구계는 상호작용하기 때문에 한 요소의 변화가 다른 요소에도 영향을 준다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "다른 요소에는 영향을 주지 않는다",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "다른 요소에도 영향을 준다",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "수권에만 영향을 준다",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "기권에만 영향을 준다",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "내핵의 상태와 조성은 무엇인가?",
+            "explanation": "내핵은 철과 니켈로 구성되어 있으며 고체 상태이다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "액체 상태, 철과 니켈",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "고체 상태, 철과 니켈",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "기체 상태, 산소와 질소",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "고체 상태, 규소와 알루미늄",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "외핵의 상태와 조성은 무엇인가?",
+            "explanation": "외핵은 철과 니켈로 구성되어 있으며 액체 상태이다.",
+            "difficulty": 2,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "액체 상태, 철과 니켈",
+                "is_correct": true,
+                "order_no": 1
+            },
+            {
+                "content": "고체 상태, 철과 니켈",
+                "is_correct": false,
+                "order_no": 2
+            },
+            {
+                "content": "고체 상태, 산소와 규소",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "액체 상태, 규소와 마그네슘",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    },
+    {
+        "question": {
+            "category_id": 10,
+            "type": "MCQ",
+            "stem": "암영대는 어떤 현상 때문에 생기는가?",
+            "explanation": "암영대는 맨틀과 외핵 경계에서 지진파가 도착하지 않는 지역으로, P파만 도달한다.",
+            "difficulty": 3,
+            "grade": "mid1_earth",
+            "language": "ko",
+            "status": "published"
+        },
+        "choices": [
+            {
+                "content": "지진파의 속도 감소",
+                "is_correct": false,
+                "order_no": 1
+            },
+            {
+                "content": "맨틀과 외핵 경계에서 굴절",
+                "is_correct": true,
+                "order_no": 2
+            },
+            {
+                "content": "지구 자기장 영향",
+                "is_correct": false,
+                "order_no": 3
+            },
+            {
+                "content": "대륙 지각 충돌",
+                "is_correct": false,
+                "order_no": 4
+            }
+        ]
+    }
+]

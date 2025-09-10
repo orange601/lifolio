@@ -1,0 +1,461 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+// 타입 정의
+interface QuizQuestion {
+    id: number;
+    question: string;
+    options: string[];
+    correctAnswer: number;
+    explanation: string;
+}
+
+interface CategoryInfo {
+    name: string;
+    icon: string;
+    color: string;
+}
+
+interface Answer {
+    questionId: number;
+    selected: number | null;
+    correct: number;
+    isCorrect: boolean;
+}
+
+// 카테고리 키 타입 정의
+type CategoryKey = 'general' | 'math' | 'programming' | 'history' | 'science' | 'english' | 'sports' | 'entertainment' | 'random';
+
+// 카테고리별 퀴즈 데이터
+const quizDataByCategory: Record<CategoryKey, QuizQuestion[]> = {
+    general: [
+        {
+            id: 1,
+            question: "대한민국의 수도는 어디인가요?",
+            options: ["서울", "부산", "대구", "인천"],
+            correctAnswer: 0,
+            explanation: "대한민국의 수도는 서울입니다."
+        },
+        {
+            id: 2,
+            question: "세계에서 가장 높은 산은?",
+            options: ["에베레스트", "K2", "칸첸중가", "로체"],
+            correctAnswer: 0,
+            explanation: "에베레스트는 해발 8,848m로 세계에서 가장 높은 산입니다."
+        }
+    ],
+    math: [
+        {
+            id: 1,
+            question: "2 + 2 × 3의 값은?",
+            options: ["8", "12", "10", "6"],
+            correctAnswer: 0,
+            explanation: "곱셈을 먼저 계산하므로 2 + 6 = 8입니다."
+        },
+        {
+            id: 2,
+            question: "원의 넓이를 구하는 공식은?",
+            options: ["πr²", "2πr", "πd", "r²"],
+            correctAnswer: 0,
+            explanation: "원의 넓이는 π × 반지름²입니다."
+        }
+    ],
+    programming: [
+        {
+            id: 1,
+            question: "JavaScript에서 변수를 선언하는 키워드가 아닌 것은?",
+            options: ["var", "let", "const", "int"],
+            correctAnswer: 3,
+            explanation: "JavaScript에서는 int 키워드를 사용하지 않습니다."
+        },
+        {
+            id: 2,
+            question: "HTML에서 가장 큰 제목 태그는?",
+            options: ["h1", "h6", "title", "header"],
+            correctAnswer: 0,
+            explanation: "h1은 HTML에서 가장 큰 제목 태그입니다."
+        }
+    ],
+    history: [
+        {
+            id: 1,
+            question: "조선왕조를 건국한 사람은?",
+            options: ["이성계", "정도전", "이방원", "세종대왕"],
+            correctAnswer: 0,
+            explanation: "이성계(태조)가 1392년 조선을 건국했습니다."
+        }
+    ],
+    science: [
+        {
+            id: 1,
+            question: "물의 화학식은?",
+            options: ["H2O", "CO2", "NaCl", "O2"],
+            correctAnswer: 0,
+            explanation: "물의 화학식은 H2O입니다."
+        }
+    ],
+    english: [
+        {
+            id: 1,
+            question: "'사과'를 영어로 하면?",
+            options: ["Apple", "Orange", "Banana", "Grape"],
+            correctAnswer: 0,
+            explanation: "사과는 영어로 Apple입니다."
+        }
+    ],
+    sports: [
+        {
+            id: 1,
+            question: "축구에서 한 팀의 선수는 몇 명인가요?",
+            options: ["11명", "10명", "9명", "12명"],
+            correctAnswer: 0,
+            explanation: "축구는 골키퍼 포함 11명으로 구성됩니다."
+        }
+    ],
+    entertainment: [
+        {
+            id: 1,
+            question: "영화 '기생충'의 감독은?",
+            options: ["봉준호", "박찬욱", "김기덕", "이창동"],
+            correctAnswer: 0,
+            explanation: "영화 '기생충'은 봉준호 감독의 작품입니다."
+        }
+    ],
+    random: [
+        {
+            id: 1,
+            question: "세계에서 가장 큰 대륙은?",
+            options: ["아시아", "아프리카", "북아메리카", "유럽"],
+            correctAnswer: 0,
+            explanation: "아시아는 세계에서 가장 큰 대륙입니다."
+        },
+        {
+            id: 2,
+            question: "Python에서 리스트를 생성하는 올바른 방법은?",
+            options: ["list = {}", "list = []", "list = ()", "list = <>"],
+            correctAnswer: 1,
+            explanation: "Python에서 리스트는 대괄호 []로 생성합니다."
+        },
+        {
+            id: 3,
+            question: "1 + 1 = ?",
+            options: ["1", "2", "3", "4"],
+            correctAnswer: 1,
+            explanation: "1 + 1 = 2입니다."
+        }
+    ]
+};
+
+// 카테고리 정보 맵
+const categoryMap: Record<CategoryKey, CategoryInfo> = {
+    general: { name: "일반상식", icon: "🧠", color: "blue" },
+    math: { name: "수학", icon: "🔢", color: "green" },
+    programming: { name: "프로그래밍", icon: "💻", color: "purple" },
+    history: { name: "역사", icon: "📚", color: "orange" },
+    science: { name: "과학", icon: "🔬", color: "cyan" },
+    english: { name: "영어", icon: "🇺🇸", color: "red" },
+    sports: { name: "스포츠", icon: "⚽", color: "emerald" },
+    entertainment: { name: "영화/드라마", icon: "🎬", color: "pink" },
+    random: { name: "랜덤 퀴즈", icon: "🎲", color: "indigo" }
+};
+
+export default function QuizPlayPage() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const categoryParam = searchParams.get('category') || 'random';
+    const difficulty = searchParams.get('difficulty') || 'normal';
+
+    // 카테고리 키가 유효한지 확인하는 타입 가드
+    const isValidCategory = (key: string): key is CategoryKey => {
+        return key in quizDataByCategory;
+    };
+
+    const category: CategoryKey = isValidCategory(categoryParam) ? categoryParam : 'random';
+
+    const [quizData, setQuizData] = useState<QuizQuestion[]>([]);
+    const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+    const [showResult, setShowResult] = useState<boolean>(false);
+    const [score, setScore] = useState<number>(0);
+    const [answers, setAnswers] = useState<Answer[]>([]);
+    const [timeLeft, setTimeLeft] = useState<number>(30);
+    const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
+
+    // 카테고리별 퀴즈 데이터 로드
+    useEffect(() => {
+        const data = quizDataByCategory[category];
+        setQuizData(data);
+    }, [category]);
+
+    // 카테고리 정보 가져오기
+    const getCategoryInfo = (): CategoryInfo => {
+        return categoryMap[category];
+    };
+
+    const categoryInfo = getCategoryInfo();
+
+    // 타이머 효과
+    useEffect(() => {
+        if (timeLeft > 0 && !showResult && !quizCompleted && quizData.length > 0) {
+            const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+            return () => clearTimeout(timer);
+        } else if (timeLeft === 0 && !showResult) {
+            handleNextQuestion();
+        }
+    }, [timeLeft, showResult, quizCompleted, quizData]);
+
+    // 답안 선택
+    const handleAnswerSelect = (answerIndex: number): void => {
+        setSelectedAnswer(answerIndex);
+    };
+
+    // 다음 문제로 이동
+    const handleNextQuestion = (): void => {
+        if (quizData.length === 0 || currentQuestion >= quizData.length) return;
+
+        const currentQ = quizData[currentQuestion];
+        const isCorrect = selectedAnswer === currentQ.correctAnswer;
+
+        const newAnswer: Answer = {
+            questionId: currentQ.id,
+            selected: selectedAnswer,
+            correct: currentQ.correctAnswer,
+            isCorrect
+        };
+
+        setAnswers(prevAnswers => [...prevAnswers, newAnswer]);
+
+        if (isCorrect) {
+            setScore(score + 1);
+        }
+
+        setShowResult(true);
+    };
+
+    // 결과 확인 후 다음 문제
+    const handleContinue = (): void => {
+        if (currentQuestion < quizData.length - 1) {
+            setCurrentQuestion(currentQuestion + 1);
+            setSelectedAnswer(null);
+            setShowResult(false);
+            setTimeLeft(30);
+        } else {
+            setQuizCompleted(true);
+        }
+    };
+
+    // 퀴즈 재시작
+    const handleRestart = (): void => {
+        setCurrentQuestion(0);
+        setSelectedAnswer(null);
+        setShowResult(false);
+        setScore(0);
+        setAnswers([]);
+        setTimeLeft(30);
+        setQuizCompleted(false);
+    };
+
+    // 카테고리 선택으로 돌아가기
+    const handleBackToSelection = (): void => {
+        router.push('/quiz/select');
+    };
+
+    if (quizData.length === 0) {
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="text-4xl mb-4">⏳</div>
+                    <p className="text-gray-600">퀴즈를 불러오는 중...</p>
+                </div>
+            </div>
+        );
+    }
+
+    const progress = ((currentQuestion + 1) / quizData.length) * 100;
+
+    if (quizCompleted) {
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col">
+                <div className="flex-1 flex items-center justify-center px-4">
+                    <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 text-center">
+                        <div className="text-6xl mb-6">{categoryInfo.icon}</div>
+                        <h1 className="text-2xl font-bold text-blue-900 mb-2">
+                            {categoryInfo.name} 퀴즈 완료!
+                        </h1>
+                        <div className="text-4xl font-bold text-blue-700 mb-2">
+                            {score}/{quizData.length}
+                        </div>
+                        <p className="text-gray-600 mb-6">
+                            정답률: {Math.round((score / quizData.length) * 100)}%
+                        </p>
+
+                        <div className="bg-gray-100 rounded-lg p-3 mb-6">
+                            <p className="text-sm text-gray-600">
+                                난이도: <span className="font-semibold capitalize">{difficulty}</span>
+                            </p>
+                        </div>
+
+                        <div className="space-y-3">
+                            <button
+                                onClick={handleRestart}
+                                className="w-full py-4 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-semibold text-lg transition-colors"
+                            >
+                                다시 도전하기
+                            </button>
+                            <button
+                                onClick={handleBackToSelection}
+                                className="w-full py-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-semibold text-lg transition-colors"
+                            >
+                                다른 퀴즈 선택
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (showResult) {
+        const current = quizData[currentQuestion];
+        const isCorrect = selectedAnswer === current.correctAnswer;
+
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col">
+                <div className="flex-1 flex items-center justify-center px-4">
+                    <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 text-center">
+                        <div className="text-6xl mb-6">
+                            {isCorrect ? "🎉" : "😅"}
+                        </div>
+
+                        <h2 className={`text-2xl font-bold mb-4 ${isCorrect ? 'text-green-600' : 'text-red-600'}`}>
+                            {isCorrect ? "정답입니다!" : "틀렸습니다!"}
+                        </h2>
+
+                        <div className="bg-gray-50 rounded-xl p-4 mb-6 text-left">
+                            <p className="text-sm text-gray-600 mb-2">정답:</p>
+                            <p className="font-semibold text-blue-900">
+                                {current.options[current.correctAnswer]}
+                            </p>
+                        </div>
+
+                        <div className="bg-blue-50 rounded-xl p-4 mb-6">
+                            <p className="text-sm text-blue-800">
+                                {current.explanation}
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={handleContinue}
+                            className="w-full py-4 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-semibold text-lg transition-colors"
+                        >
+                            {currentQuestion < quizData.length - 1 ? "다음 문제" : "결과 보기"}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const current = quizData[currentQuestion];
+
+    return (
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col">
+            {/* 헤더 */}
+            <header className="bg-white shadow-sm border-b border-blue-200 px-4 py-4">
+                <div className="max-w-md mx-auto">
+                    {/* 카테고리 정보 */}
+                    <div className="flex items-center justify-center mb-3">
+                        <span className="text-lg mr-2">{categoryInfo.icon}</span>
+                        <span className="text-sm font-medium text-gray-700">
+                            {categoryInfo.name}
+                        </span>
+                        {difficulty !== 'normal' && (
+                            <span className="ml-2 px-2 py-1 bg-gray-100 rounded text-xs capitalize">
+                                {difficulty}
+                            </span>
+                        )}
+                    </div>
+
+                    {/* 진행률 바 */}
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium text-gray-600">
+                            {currentQuestion + 1} / {quizData.length}
+                        </span>
+                        <span className="text-sm font-medium text-blue-600">
+                            ⏰ {timeLeft}초
+                        </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${progress}%` }}
+                        ></div>
+                    </div>
+                </div>
+            </header>
+
+            {/* 메인 콘텐츠 */}
+            <main className="flex-1 flex items-center justify-center px-4 py-8">
+                <div className="max-w-md w-full">
+                    {/* 문제 카드 */}
+                    <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
+                        <div className="text-center mb-6">
+                            <div className="text-4xl mb-4">{categoryInfo.icon}</div>
+                            <h2 className="text-lg font-bold text-blue-900 leading-relaxed">
+                                {current.question}
+                            </h2>
+                        </div>
+
+                        {/* 선택지 */}
+                        <div className="space-y-3">
+                            {current.options.map((option, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handleAnswerSelect(index)}
+                                    className={`w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ${selectedAnswer === index
+                                        ? 'border-blue-500 bg-blue-50 text-blue-900'
+                                        : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50'
+                                        }`}
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedAnswer === index
+                                            ? 'border-blue-500 bg-blue-500'
+                                            : 'border-gray-300'
+                                            }`}>
+                                            {selectedAnswer === index && (
+                                                <div className="w-2 h-2 rounded-full bg-white"></div>
+                                            )}
+                                        </div>
+                                        <span className="font-medium">{option}</span>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 다음 버튼 */}
+                    <button
+                        onClick={handleNextQuestion}
+                        disabled={selectedAnswer === null}
+                        className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-200 ${selectedAnswer !== null
+                            ? 'bg-blue-700 hover:bg-blue-800 text-white hover:shadow-lg'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                    >
+                        {currentQuestion === quizData.length - 1 ? "결과 확인" : "다음 문제"}
+                    </button>
+
+                    {/* 현재 점수 */}
+                    <div className="text-center mt-4">
+                        <span className="text-sm text-gray-600">
+                            현재 점수: <span className="font-bold text-blue-600">{score}</span>
+                        </span>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}
