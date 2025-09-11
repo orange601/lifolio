@@ -1,65 +1,60 @@
-// /app/question/batch/BatchCascader.tsx
 'use client';
-
 import React, { useEffect, useRef, useState } from 'react';
+import styles from './RankCascader.module.css';
 import { useRouter } from 'next/navigation';
-import styles from './BatchCascader.module.css'; // 기존 스타일 재사용
-import ContainerHeaderBackButton from "@/app/components/ui/backButton/HeaderBackButton";
-import QuizTimer, { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
-import { useQuickQuizStore } from '../../answer/store/batchStore';
 import type { QuizItem } from "@/core/repositroy/questions/question.type";
+import QuizContainerHeaderBackButton from "@/app/components/ui/backButton/QuizContainerHeaderBackButton";
+import QuizTimer, { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
 import QuizContainer from '@/app/components/page/quiz/QuizContainer';
+import { useQuizResultStore } from '@/app/store/review/quizResultStore'
 
 type Props = {
-    initialQuestions: (QuizItem & {
-        question: string;
-        options: string[];
-        correctOrderNo: number; // 1-based
-    })[];
+    questions: QuizItem[];
 };
 
-export default function BatchPage({ initialQuestions }: Props) {
+/**
+ * 랭킹전, 시간제한 5초, 뒤로가기 없음, 종료시 패널티
+ */
+export default function RankPage({ questions }: Props) {
     const router = useRouter();
-    const { start, answerOne, finish, reset } = useQuickQuizStore();
+    const extendedQuestions = questions.map(q => ({
+        ...q,
+        question: q.question,
+        options: q.options,
+        correctOrderNo: q.correctOrderNo ?? 0,
+    }));
+    // 스토어 
+    const { addUserAnswer } = useQuizResultStore();
+
+    const DURATION = 5;
+    // 문제 index 기본 0
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [totalTimeUsed, setTotalTimeUsed] = useState(0);
-    const timerRef = useRef<QuizTimerRef>(null);
-    const DURATION = 30;
-
-    const totalQuestions = initialQuestions.length;
+    // 현재 문제 번호
     const currentQuestionNum = currentQuestionIndex + 1;
-    const currentQuestion = initialQuestions[currentQuestionIndex];
+    // 선택된 번호
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+    // 현재 문항
+    const currentQuestion = extendedQuestions[currentQuestionIndex];
+    const timerRef = useRef<QuizTimerRef>(null);
+    const totalQuestions = questions.length;
 
-    useEffect(() => {
-        // 새 세션 시작
-        reset();
-        start(initialQuestions);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
-    const commitAnswer = (selectedIndex: number | null, timeOver = false) => {
-        const remaining = timerRef.current?.getRemaining() ?? 0;
-        const timeUsedThis = DURATION - remaining;
-        setTotalTimeUsed(t => t + timeUsedThis);
+    // 뒤로가기 핸들러
+    const goBack = () => {
+        // 진행중인 퀴즈가 있다면 확인 메시지
+        const shouldLeave = window.confirm(
+            '랭킹 문제에서는 뒤로가기를 하실 수 없습니다. \n 퀴즈를 그만두시겠습니까?'
+        );
+        if (!shouldLeave) return;
 
-        // 저장만! (정답/오답 화면 X)
-        answerOne({
-            questionIndex: currentQuestionIndex,
-            selectedIndex: timeOver ? null : selectedIndex,
-            timeUsed: timeUsedThis
-        });
-
-        // 다음 문제 or 종료
-        if (currentQuestionIndex >= totalQuestions - 1) {
-            finish(totalTimeUsed + timeUsedThis);
-            router.push('/question/answer'); // 별도 페이지 이동
-            return;
-        }
-
-        setCurrentQuestionIndex(i => i + 1);
-        setSelectedAnswer(null);
+        // 홈으로
+        router.push('/');
     };
+
+    // 시간 초과 이벤트
+    const handleTimeOver = () => {
+        commitAnswer(null, true);
+    }
 
     // 보기 선택 이벤트
     const handleOptionClick = (index: number) => {
@@ -67,8 +62,23 @@ export default function BatchPage({ initialQuestions }: Props) {
         commitAnswer(index, false);
     };
 
-    const handleTimeOver = () => commitAnswer(null, true);
-    const goBack = () => router.push('/');
+    // 정답 선택 이벤트
+    const commitAnswer = (selectedIndex: number | null, timeOver = false) => {
+
+        addUserAnswer({
+            questionIndex: currentQuestionIndex,
+            selectedIndex: timeOver ? null : selectedIndex,
+        });
+
+        // 다음 문제 or 종료
+        if (currentQuestionIndex >= totalQuestions - 1) {
+            router.push('/question/answer'); // 별도 페이지 이동
+            return;
+        }
+
+        // 문제 index
+        setCurrentQuestionIndex(i => i + 1);
+    }
 
     const progressPercentage = (currentQuestionNum / totalQuestions) * 100;
 
@@ -78,14 +88,15 @@ export default function BatchPage({ initialQuestions }: Props) {
                 {/* Header */}
                 <div className="container-header">
                     <div className={styles.headerLeft}>
-                        <ContainerHeaderBackButton onBack={goBack} />
+                        <QuizContainerHeaderBackButton
+                            onBack={goBack}
+                        />
                     </div>
 
                     <div className={styles.headerCenter}>
                         <div className={styles.progressInfo}>
                             <span className={styles.currentQuestion}>{currentQuestionNum}</span>
-                            <span className={styles.separator}>/</span>
-                            <span className={styles.totalQuestions}>{totalQuestions}</span>
+                            <span className={styles.totalQuestions}> 번 문제</span>
                         </div>
                         <div className={styles.progressLabel}>문제</div>
                     </div>

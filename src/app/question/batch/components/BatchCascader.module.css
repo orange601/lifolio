@@ -1,7 +1,6 @@
-/* quiz/components/QuizCascader.module.css */
+/* /app/question/batch/BatchCascader.module.css */
 
-
-/* 헤더 레이아웃 개선 */
+/* 헤더 레이아웃 */
 .headerLeft {
     display: flex;
     align-items: center;
@@ -26,6 +25,7 @@
     /* 타이머 공간 보장 */
 }
 
+/* 진행 정보 */
 .progressInfo {
     display: flex;
     align-items: baseline;
@@ -65,18 +65,7 @@
     line-height: 1;
 }
 
-
-/* 타이머/우측 공간 */
-.headerSpacer {
-    margin-left: auto;
-}
-
-.progressInfo {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
+/* 진행 바 */
 .progressBarContainer {
     background: rgba(255, 255, 255, 0.2);
     height: 8px;
@@ -94,197 +83,7 @@
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-.quizContainer {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    animation: fadeInUp 0.25s ease-out both;
-}
-
-.questionCard {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    animation: slideInUp 0.3s ease-out both;
-}
-
-.questionNumber {
-    color: #667eea;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    animation: fadeIn 0.4s ease-out 0.1s both;
-}
-
-.questionText {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #333;
-    line-height: 1.5;
-    margin-bottom: 25px;
-    animation: fadeIn 0.4s ease-out 0.2s both;
-}
-
-.optionsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.option {
-    background: rgba(255, 255, 255, 0.8);
-    border: 2px solid rgba(102, 126, 234, 0.2);
-    border-radius: 16px;
-    padding: 18px 20px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
-    animation: slideInLeft 0.3s ease-out both;
-}
-
-/* 각 옵션별로 지연시간 설정 */
-.option:nth-child(1) {
-    animation-delay: 0.3s;
-}
-
-.option:nth-child(2) {
-    animation-delay: 0.35s;
-}
-
-.option:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-.option:nth-child(4) {
-    animation-delay: 0.45s;
-}
-
-.option:hover {
-    border-color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-}
-
-/* 상태 클래스는 분리해서 조합 */
-.selected {
-    border-color: #667eea;
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-}
-
-.optionLetter {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(102, 126, 234, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    color: #667eea;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
-}
-
-/* .option.selected .option-letter → 모듈에서는 이렇게 분리 */
-.selected .optionLetter {
-    background: rgba(255, 255, 255, 0.3);
-    color: white;
-}
-
-.bottomSection {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 20px;
-    animation: fadeInUp 0.3s ease-out 0.5s both;
-}
-
-.quizStats {
-    display: flex;
-    justify-content: space-around;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    border-radius: 16px;
-    padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.statItem {
-    text-align: center;
-    color: white;
-}
-
-.statNumber {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.statLabel {
-    font-size: 0.8rem;
-    opacity: 0.9;
-    font-weight: 500;
-}
-
-.checkButton {
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    padding: 18px 32px;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-    letter-spacing: 0.5px;
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-/* enabled 상태 분리 */
-.enabled {
-    opacity: 1;
-    pointer-events: all;
-    animation: pulse 0.3s ease-out both;
-}
-
-.enabled:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-}
-
-.checkButton:active {
-    transform: translateY(0);
-}
-
-/* 빠른 애니메이션들 */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
+/* 애니메이션 (실제 사용되는 것만 유지) */
 @keyframes fadeInDown {
     from {
         opacity: 0;
@@ -297,86 +96,7 @@
     }
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.02);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes float {
-
-    0%,
-    100% {
-        transform: translateY(0) rotate(0deg);
-    }
-
-    50% {
-        transform: translateY(-20px) rotate(180deg);
-    }
-}
-
-/* responsive */
-@media (min-width: 768px) {
-    .questionText {
-        font-size: 1.4rem;
-    }
-}
-
-@media (max-width: 360px) {
-    .questionCard {
-        padding: 25px;
-    }
-
-    .questionText {
-        font-size: 1.2rem;
-    }
-}
-
-/* 반응형 개선 */
+/* 반응형 */
 @media (max-width: 480px) {
     .headerLeft {
         min-width: 50px;

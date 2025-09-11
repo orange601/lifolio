@@ -3,6 +3,22 @@
 
 import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 
+/**
+ * 사용방법
+    <QuizTimer
+        key={currentQuestionIndex}
+        ref={timerRef}
+        duration={DURATION}
+        paused={false}
+        onTimeOver={handleTimeOver}
+    />
+    key → 문제 바뀔 때 타이머 리셋
+    ref → 부모에서 직접 남은 시간 제어 가능
+    duration → 시작 초 (기본 30)
+    paused → 타이머 멈출지 여부
+    onTimeOver → 시간이 다 됐을 때 실행할 동작
+ */
+
 export type QuizTimerRef = {
     getRemaining: () => number;
     reset: () => void;

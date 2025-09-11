@@ -1,12 +1,16 @@
 'use client';
 
+/**
+ * 뒤로가기 버튼 old 버전
+ */
+
 import React from "react";
 
 type Props = {
     onBack: () => void;
 };
 
-export default function ContainerHeaderBackButton({ onBack }: Props) {
+export default function HeaderBackButton({ onBack }: Props) {
     return (
         <>
             <button

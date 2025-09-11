@@ -65,10 +65,20 @@ export default function QuizHomepage() {
                 <div className={styles.featureText}>테마별 퀴즈</div>
               </Link>
 
-              <div className={styles.featureItem}>
+              <Link
+                href="/question/rank"
+                className={`${styles.featureItem} ${styles.featureLink}`}
+                role="button"
+                aria-label="순위별 퀴즈로 이동"
+              >
+                <div className={styles.featureIcon}>🏆</div>
+                <div className={styles.featureText}>경쟁 모드</div>
+              </Link>
+
+              {/* <div className={styles.featureItem}>
                 <div className={styles.featureIcon}>🎲</div>
                 <div className={styles.featureText}>OX 퀴즈</div>
-              </div>
+              </div> */}
 
               <Link
                 href="/categories"
