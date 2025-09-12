@@ -1,20 +1,54 @@
-/**
- * 랭킹전 컨테이너 헤더, 시간제한 5초, 뒤로가기 없음
- */
-import styles from '../components/RankContainerHeader.module.css';
-export default function RankContainerHeader() {
-    return (
-        <div className="container-header">
-            <div className={styles.headerLeft}>
+'use client';
+import React, { forwardRef } from 'react';
+import styles from './RankContainerHeader.module.css';
+import QuizContainerHeaderBackButton from "@/app/components/ui/backButton/QuizContainerHeaderBackButton";
+import QuizTimer, { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
 
-            </div>
+type RankContainerHeaderProps = {
+    currentQuestionNum: number;
+    onBack: () => void;
+    duration: number;
+    paused?: boolean;
+    onTimeOver: () => void;
+    /** 문제 변경 시 타이머 리셋을 위한 key */
+    timerKey: number;
+};
 
-            <div className={styles.headerCenter}>
-                <div className={styles.progressLabel}>랭킹 전</div>
-            </div>
+const RankContainerHeader = forwardRef<QuizTimerRef, RankContainerHeaderProps>(
+    ({
+        currentQuestionNum,
+        onBack,
+        duration,
+        paused = false,
+        onTimeOver,
+        timerKey
+    }, ref) => {
+        return (
+            <div className="container-header">
+                <div className={styles.headerLeft}>
+                    <QuizContainerHeaderBackButton onBack={onBack} />
+                </div>
 
-            <div className={styles.headerRight}>
+                <div className={styles.headerCenter}>
+                    <div className={styles.progressInfo}>
+                        <span className={styles.currentQuestion}>{currentQuestionNum}</span>
+                        <span className={styles.totalQuestions}> 번 문제</span>
+                    </div>
+                </div>
+
+                <div className={styles.headerRight}>
+                    <QuizTimer
+                        key={timerKey}
+                        ref={ref}
+                        duration={duration}
+                        paused={paused}
+                        onTimeOver={onTimeOver}
+                    />
+                </div>
             </div>
-        </div>
-    )
-}
+        );
+    }
+);
+
+RankContainerHeader.displayName = 'RankContainerHeader';
+export default RankContainerHeader;

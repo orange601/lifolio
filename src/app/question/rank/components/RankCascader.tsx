@@ -7,6 +7,7 @@ import QuizContainerHeaderBackButton from "@/app/components/ui/backButton/QuizCo
 import QuizTimer, { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
 import QuizContainer from '@/app/components/page/quiz/QuizContainer';
 import { useQuizResultStore } from '@/app/store/review/quizResultStore'
+import RankContainerHeader from './RankContainerHeader';
 
 type Props = {
     questions: QuizItem[];
@@ -23,8 +24,9 @@ export default function RankPage({ questions }: Props) {
         options: q.options,
         correctOrderNo: q.correctOrderNo ?? 0,
     }));
-    // 스토어 
-    const { addUserAnswer } = useQuizResultStore();
+
+    // 스토어
+    const { addUserAnswer, userAnswerReset } = useQuizResultStore();
 
     const DURATION = 5;
     // 문제 index 기본 0
@@ -38,23 +40,30 @@ export default function RankPage({ questions }: Props) {
     const timerRef = useRef<QuizTimerRef>(null);
     const totalQuestions = questions.length;
 
+    // 초기화
+    useEffect(() => {
+        userAnswerReset();
+    }, [userAnswerReset]);
+
+    // [1] 문제 인덱스 바뀔 때 선택 초기화
+    useEffect(() => {
+        setSelectedAnswer(null);
+    }, [currentQuestionIndex]);
 
     // 뒤로가기 핸들러
     const goBack = () => {
-        // 진행중인 퀴즈가 있다면 확인 메시지
         const shouldLeave = window.confirm(
             '랭킹 문제에서는 뒤로가기를 하실 수 없습니다. \n 퀴즈를 그만두시겠습니까?'
         );
         if (!shouldLeave) return;
-
-        // 홈으로
         router.push('/');
     };
 
-    // 시간 초과 이벤트
+    // [2] 시간 초과 이벤트 시 선택 초기화 포함
     const handleTimeOver = () => {
+        setSelectedAnswer(null);
         commitAnswer(null, true);
-    }
+    };
 
     // 보기 선택 이벤트
     const handleOptionClick = (index: number) => {
@@ -62,9 +71,8 @@ export default function RankPage({ questions }: Props) {
         commitAnswer(index, false);
     };
 
-    // 정답 선택 이벤트
+    // [3] 정답 선택 이벤트: 다음 문제로 가기 전 선택 초기화
     const commitAnswer = (selectedIndex: number | null, timeOver = false) => {
-
         addUserAnswer({
             questionIndex: currentQuestionIndex,
             selectedIndex: timeOver ? null : selectedIndex,
@@ -76,41 +84,26 @@ export default function RankPage({ questions }: Props) {
             return;
         }
 
-        // 문제 index
+        // 다음 문제로 이동하기 전에 선택 초기화
+        setSelectedAnswer(null);
         setCurrentQuestionIndex(i => i + 1);
-    }
+    };
 
     const progressPercentage = (currentQuestionNum / totalQuestions) * 100;
 
     return (
         <div className="page-background">
             <div className="container">
-                {/* Header */}
-                <div className="container-header">
-                    <div className={styles.headerLeft}>
-                        <QuizContainerHeaderBackButton
-                            onBack={goBack}
-                        />
-                    </div>
-
-                    <div className={styles.headerCenter}>
-                        <div className={styles.progressInfo}>
-                            <span className={styles.currentQuestion}>{currentQuestionNum}</span>
-                            <span className={styles.totalQuestions}> 번 문제</span>
-                        </div>
-                        <div className={styles.progressLabel}>문제</div>
-                    </div>
-
-                    <div className={styles.headerRight}>
-                        <QuizTimer
-                            key={currentQuestionIndex}
-                            ref={timerRef}
-                            duration={DURATION}
-                            paused={false}
-                            onTimeOver={handleTimeOver}
-                        />
-                    </div>
-                </div>
+                {/* Header (분리된 컴포넌트 사용) */}
+                <RankContainerHeader
+                    ref={timerRef}
+                    currentQuestionNum={currentQuestionNum}
+                    onBack={goBack}
+                    duration={DURATION}
+                    paused={false}
+                    onTimeOver={handleTimeOver}
+                    timerKey={currentQuestionIndex}
+                />
 
                 {/* Progress Bar */}
                 <div className={styles.progressBarContainer}>
@@ -125,7 +118,6 @@ export default function RankPage({ questions }: Props) {
                     selectedIndex={selectedAnswer}
                     onSelect={handleOptionClick}
                 />
-
             </div>
         </div>
     );
