@@ -32,7 +32,7 @@ const RankContainerHeader = forwardRef<QuizTimerRef, RankContainerHeaderProps>(
                 <div className={styles.headerCenter}>
                     <div className={styles.progressInfo}>
                         <span className={styles.currentQuestion}>{currentQuestionNum}</span>
-                        <span className={styles.totalQuestions}> 번 문제</span>
+                        <span className={styles.totalQuestions}>번 문제</span>
                     </div>
                 </div>
 
