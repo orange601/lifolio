@@ -1,12 +1,10 @@
-// app/page.tsx
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
-import styles from './home.module.css'; // 모듈 임포트
+import styles from './home.module.css';
 
 export default function QuizHomepage() {
-
   return (
     <div className="page-background">
       <div className="container">
@@ -29,32 +27,36 @@ export default function QuizHomepage() {
               배워보세요!
             </p>
 
-            {/* Quiz Mode Buttons */}
+            {/* Quiz Mode Buttons (Link를 버튼처럼 스타일링) */}
             <div className={styles.quizButtons}>
-              <Link href="/question/quick" prefetch>
-                <button className={`${styles.quizModeButton} ${styles.quickMode}`}>
-                  <div className={styles.buttonIcon}>⚡</div>
-                  <div className={styles.buttonText}>
-                    <span className={styles.buttonTitle}>한 문제씩 풀기</span>
-                    <span className={styles.buttonDesc}>즉시 정답 확인</span>
-                  </div>
-                </button>
+              <Link
+                href="/question/quick"
+                className={`${styles.quizModeButton} ${styles.quickMode}`}
+                aria-label="한 문제씩 풀기로 이동"
+              >
+                <div className={styles.buttonIcon}>⚡</div>
+                <div className={styles.buttonText}>
+                  <span className={styles.buttonTitle}>한 문제씩 풀기</span>
+                  {/* <span className={styles.buttonDesc}>즉시 정답 확인</span> */}
+                </div>
               </Link>
 
-              <Link href="/question/batch" prefetch>
-                <button className={`${styles.quizModeButton} ${styles.batchMode}`}>
-                  <div className={styles.buttonIcon}>📋</div>
-                  <div className={styles.buttonText}>
-                    <span className={styles.buttonTitle}>모든 문제 풀기</span>
-                    <span className={styles.buttonDesc}>완료 후 정답 확인</span>
-                  </div>
-                </button>
+              <Link
+                href="/question/batch"
+                className={`${styles.quizModeButton} ${styles.batchMode}`}
+                aria-label="모든 문제 풀기로 이동"
+              >
+                <div className={styles.buttonIcon}>📋</div>
+                <div className={styles.buttonText}>
+                  <span className={styles.buttonTitle}>모든 문제 풀기</span>
+                  {/* <span className={styles.buttonDesc}>완료 후 정답 확인</span> */}
+                </div>
               </Link>
             </div>
 
             {/* Features */}
             <div className={styles.features}>
-              {/* 테마별 퀴즈 → 링크로 변경 */}
+              {/* 테마별 퀴즈 */}
               <Link
                 href="/category"
                 className={`${styles.featureItem} ${styles.featureLink}`}
@@ -65,6 +67,7 @@ export default function QuizHomepage() {
                 <div className={styles.featureText}>테마별 퀴즈</div>
               </Link>
 
+              {/* 경쟁 모드 */}
               <Link
                 href="/question/rank"
                 className={`${styles.featureItem} ${styles.featureLink}`}
@@ -75,11 +78,7 @@ export default function QuizHomepage() {
                 <div className={styles.featureText}>경쟁 모드</div>
               </Link>
 
-              {/* <div className={styles.featureItem}>
-                <div className={styles.featureIcon}>🎲</div>
-                <div className={styles.featureText}>OX 퀴즈</div>
-              </div> */}
-
+              {/* 카테고리별 퀴즈 */}
               <Link
                 href="/categories"
                 className={`${styles.featureItem} ${styles.featureLink}`}
@@ -89,7 +88,6 @@ export default function QuizHomepage() {
                 <div className={styles.featureIcon}>🏆</div>
                 <div className={styles.featureText}>카테고리별 퀴즈</div>
               </Link>
-
             </div>
           </div>
         </div>
