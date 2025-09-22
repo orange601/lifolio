@@ -12,6 +12,7 @@
  */
 
 import * as cheerio from "cheerio";
+import type { AnyNode } from "domhandler";
 // 프로젝트 경로 기준 import (필요에 맞게 경로 조정)
 import { saveGeneratedQuestions } from "@/core/repositroy/questions/question.create.repo";
 
@@ -127,7 +128,7 @@ async function fetchElementsKo(): Promise<ElementRow[]> {
 
     // 가장 큰 목록 테이블을 선택(헤더에 '기호'와 '원소 이름'이 포함된 테이블)
     const tables = $("table.wikitable");
-    let target: cheerio.Cheerio | null = null;
+    let target: cheerio.Cheerio<AnyNode> | null = null;
 
     tables.each((_, t) => {
         const thText = $(t).find("th").text();
