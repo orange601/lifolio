@@ -4,6 +4,7 @@
 import React from 'react';
 import styles from './AnswerPage.module.css';
 import ContainerHeaderBackButton from "@/app/components/ui/backButton/HeaderBackButton";
+import ToDashboardButton from '@/app/components/ui/backButton/ToDashboardButton';
 
 interface QuizResultData {
     question: string;
@@ -80,13 +81,6 @@ export default function AnswerPage({
                         <div className={styles.questionText}>{resultData.question}</div>
 
                         <div className={styles.answerComparison}>
-                            {/* 내 답 표시가 필요하면 아래를 복구하세요
-              {!resultData.isCorrect && (
-                <div className={`${styles.answerItem} ${styles.incorrect}`}>
-                  <div className={styles.answerLabel}>내 답</div>
-                  <div>{resultData.selectedAnswer}</div>
-                </div>
-              )} */}
                             <div className={`${styles.answerItem} ${styles.correct}`}>
                                 <div className={styles.answerLabel}>정답</div>
                                 <div>{resultData.correctAnswer}</div>
@@ -101,30 +95,16 @@ export default function AnswerPage({
                         )}
                     </div>
 
-                    {/* 통계는 필요 시 복구
-          <div className={styles.statsGrid}>
-            <div className={styles.statCard}>
-              <div className={styles.statNumber}>{resultData.timeUsed}</div>
-              <div className={styles.statLabel}>소요 시간(초)</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statNumber}>{resultData.currentScore}</div>
-              <div className={styles.statLabel}>현재 점수</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statNumber}>{Math.round(resultData.accuracy)}</div>
-              <div className={styles.statLabel}>정답률(%)</div>
-            </div>
-          </div> */}
-
                     {/* Action Buttons */}
                     <div className={styles.actionButtons}>
                         <button className={styles.primaryButton} onClick={handleNextQuestion}>
                             {isLastQuestion ? '퀴즈 완료' : '다음 문제'}
                         </button>
-                        <button className={styles.secondaryButton} onClick={handleGoToDashboard}>
+                        <ToDashboardButton
+                            onClick={handleGoToDashboard}
+                        >
                             대시보드로
-                        </button>
+                        </ToDashboardButton>
                     </div>
                 </div>
             </div>

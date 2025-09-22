@@ -1,0 +1,73 @@
+.actionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px 32px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.actionButton::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.actionButton:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.actionButton:hover .buttonIcon {
+    transform: scale(1.1);
+}
+
+@media (min-width: 768px) {
+    .actionButtons {
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .actionButton {
+        flex: 0 0 auto;
+        min-width: 200px;
+    }
+}
+
+.tertiary {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.tertiary:hover {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+}
+
+.buttonIcon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.actionButton:hover .buttonIcon {
+    transform: scale(1.1);
+}

@@ -5,6 +5,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuizResultStore } from '@/app/store/review/quizResultStore';
 import styles from './AnswerCascader.module.css';
+import ToDashboardButton from '@/app/components/ui/backButton/ToDashboardButton';
 
 export default function AnswerCascader() {
     const router = useRouter();
@@ -28,7 +29,7 @@ export default function AnswerCascader() {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleGoHome = () => {
+    const handleGoToDashboard = () => {
         resetAll();
         router.push('/');
     };
@@ -50,7 +51,7 @@ export default function AnswerCascader() {
                 <div className="container">
                     <div className={styles.noDataMessage}>
                         <h2>결과를 찾을 수 없습니다</h2>
-                        <button onClick={handleGoHome} className={styles.primaryButton}>
+                        <button onClick={handleGoToDashboard} className={styles.primaryButton}>
                             홈으로 돌아가기
                         </button>
                     </div>
@@ -103,9 +104,11 @@ export default function AnswerCascader() {
                         <button onClick={handleRetry} className={styles.secondaryButton}>
                             다시 풀기
                         </button>
-                        <button onClick={handleGoHome} className={styles.ghostButton}>
-                            홈으로 돌아가기
-                        </button>
+                        <ToDashboardButton
+                            onClick={handleGoToDashboard}
+                        >
+                            대시보드로
+                        </ToDashboardButton>
                     </div>
                 </div>
             </div>
