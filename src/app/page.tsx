@@ -61,10 +61,10 @@ export default function QuizHomepage() {
                 href="/category"
                 className={`${styles.featureItem} ${styles.featureLink}`}
                 role="button"
-                aria-label="테마별 퀴즈로 이동"
+                aria-label="주제별 퀴즈로 이동"
               >
-                <div className={styles.featureIcon}>📚</div>
-                <div className={styles.featureText}>테마별 퀴즈</div>
+                <div className={styles.featureIcon}>🏷️</div>
+                <div className={styles.featureText}>주제별 퀴즈</div>
               </Link>
 
               {/* 경쟁 모드 */}

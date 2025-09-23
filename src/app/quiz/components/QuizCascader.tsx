@@ -16,7 +16,7 @@ type Props = {
         options: string[];
         correctOrderNo: number; // 1-based
     })[];
-    difficulty: number;
+    difficulty?: number;
     theme?: string;
 };
 

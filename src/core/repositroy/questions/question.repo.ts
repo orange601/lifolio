@@ -13,7 +13,7 @@ type FindOptions = {
  */
 export async function findAllMcq(
   categoryId: number,
-  difficulty: number,
+  difficulty?: number,
   opts: FindOptions = {},
 ): Promise<QuestionWithChoices[]> {
   const limitRaw = Number.isFinite(opts.limit as number) ? Number(opts.limit) : 10;
@@ -46,7 +46,7 @@ export async function findAllMcq(
     FROM quiz.question q
     JOIN quiz.choice c ON c.question_id = q.id
     WHERE q.category_id = $1
-      AND q.difficulty = $2
+      AND ($2::int IS NULL OR q.difficulty = $2)
       AND q.type = 'MCQ'
       AND q.status = 'published'
     GROUP BY 
@@ -60,16 +60,19 @@ export async function findAllMcq(
     ${orderBy}
     LIMIT $3
   `;
-  const { rows } = await pool.query<QuestionWithChoices>(sql, [categoryId, difficulty, limit]);
+
+  // ✅ difficulty가 undefined면 null로 바인딩
+  const { rows } = await pool.query<QuestionWithChoices>(sql, [categoryId, difficulty ?? null, limit]);
   return rows;
 }
+
 
 /** 
  * 프런트에서 바로 쓰는 형태로 매핑 (1-based correctOrderNo 보장)
  */
 export async function findAllQuizItems(
   categoryId: number,
-  difficulty: number,
+  difficulty?: number,
   opts: FindOptions = {},
 ): Promise<QuizItem[]> {
   const rows = await findAllMcq(categoryId, difficulty, opts);
@@ -105,7 +108,7 @@ export async function findAllQuizItems(
 
 export async function findQuestionsWithChoicesByCategoryAndDifficulty(
   categoryId: number,
-  difficulty: number,
+  difficulty?: number,
 ): Promise<QuestionWithChoices[]> {
   const sql = `
     SELECT 
@@ -136,13 +139,13 @@ export async function findQuestionsWithChoicesByCategoryAndDifficulty(
     FROM quiz.question q
     LEFT JOIN quiz.choice c ON c.question_id = q.id
     WHERE q.category_id = $1
-      AND q.difficulty = $2
+      AND ($2::int IS NULL OR q.difficulty = $2)
     GROUP BY 
       q.id, q.category_id, q."type", q.stem, q.explanation, q.difficulty,
       q.grade, q.language, q.status, q.created_by, q.created_at, q.updated_at
     ORDER BY q.created_at DESC
   `;
-  const { rows } = await pool.query<QuestionWithChoices>(sql, [categoryId, difficulty]);
+  const { rows } = await pool.query<QuestionWithChoices>(sql, [categoryId, difficulty ?? null]);
   return rows;
 }
 

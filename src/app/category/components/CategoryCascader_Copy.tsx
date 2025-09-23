@@ -1,3 +1,9 @@
+/**
+ * 카테고리 선택 후 레벨 고르는 단계가 있는 화면. 
+ * 나중에 필요할것 같아 백업해뒀음
+ */
+
+
 'use client';
 
 import React, { useState } from 'react';
@@ -72,7 +78,7 @@ export default function CategorySelection({ quizCategories }: { quizCategories: 
 
     const startQuiz = (category: FindAllCategories) => {
         const categoryId = category.id;
-        router.push(`/quiz?categoryId=${categoryId}`);
+        router.push(`/difficulty?categoryId=${categoryId}`);
     };
 
     const getHeaderTitle = () =>

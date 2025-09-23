@@ -10,6 +10,7 @@ export async function findAllCategories(
     const sql = `
         SELECT id, parent_id, "name", slug, created_at, description
         FROM quiz.category
+        WHERE published = true
         ORDER BY id ASC
   `;
     const { rows } = await pool.query<CategoryRowRaw>(sql); // 예외 throw 발생, try catch 불필요
