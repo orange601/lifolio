@@ -2,7 +2,6 @@
 
 import RankingPage from "./components/RankCascader";
 import { findQuickStartMcqItems } from "@/core/repositroy/questions/quick.question.repo"
-import RankAuthGate from "@/app/components/page/auth/AuthGate"
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
