@@ -2,113 +2,54 @@
 
 import React, { useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuizResultStore } from '@/app/store/review/quizResultStore';
 import styles from '../components/ReviewCascader.module.css';
+import type { AttemptHeader, AttemptReview, AttemptReviewItem } from "@/core/repositroy/attempt_answer/attempt.review.repo";
 
 type FilterMode = 'all' | 'incorrect' | 'unanswered';
 
-type Question = {
-    question: string;
-    options: string[];
-    correctOrderNo: number;
-    explanation?: string;
-};
-
-type Answer = {
-    questionIndex: number;
-    selectedIndex: number | null;
-};
-
 type Derived = {
-    idx: number;
+    idx: number;                 // 0-based
     question: string;
     options: string[];
     correctIndex: number;
     selectedIndex: number | null;
     isAnswered: boolean;
     isCorrect: boolean;
-    explanation?: string;
-    summaryText: string;
+    explanation?: string | null;
 };
 
 function getOptionLetter(i: number) {
     return String.fromCharCode(65 + i);
 }
 
-export default function ReviewPage() {
+export default function ReviewCascaderPage({ review }: { review: AttemptReview }) {
     const router = useRouter();
-    const { questions, answers, resetAll } = useQuizResultStore();
+    const { attempt, items } = review;
 
-    // Guard clause
-    if (!questions || questions.length === 0) {
-        return (
-            <div className="page-background">
-                <div className="container">
-                    <div className={styles.noDataMessage}>
-                        <div className={styles.noDataIcon}>📝</div>
-                        <h2>퀴즈 결과를 찾을 수 없습니다</h2>
-                        <p>홈으로 돌아가서 새로운 퀴즈를 시작해보세요.</p>
-                        <button
-                            onClick={() => { resetAll(); router.push('/'); }}
-                            className={styles.primaryButton}
-                        >
-                            홈으로 돌아가기
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // Derived data calculation
-    const answersByIdx = useMemo(() => {
-        const m = new Map<number, number | null>();
-        (answers as Answer[]).forEach(a => m.set(a.questionIndex, a.selectedIndex));
-        return m;
-    }, [answers]);
-
+    // items → Derived 변환 (문항 텍스트/옵션이 없는 경우 안전 처리)
     const derivedAll: Derived[] = useMemo(() => {
-        return (questions as Question[]).map((q, idx) => {
-            const correctIndex = (q.correctOrderNo ?? 1) - 1;
-            const selectedIndex = answersByIdx.has(idx) ? (answersByIdx.get(idx) ?? null) : null;
+        return items.map((it: AttemptReviewItem, idx) => {
+            const options = Array.isArray(it.options) ? it.options : [];
+            const q = it.question ?? '(문항 텍스트 없음)';
+            const correctIndex = it.correct_idx ?? 0;
+            const selectedIndex = it.selected_idx;
             const isAnswered = selectedIndex !== null && selectedIndex !== undefined;
             const isCorrect = isAnswered ? selectedIndex === correctIndex : false;
 
-            const chosen = isAnswered && selectedIndex !== null ?
-                `${getOptionLetter(selectedIndex)}. ${q.options[selectedIndex]}` : '답안 없음';
-            const correct = `${getOptionLetter(correctIndex)}. ${q.options[correctIndex]}`;
-            const summaryText = `선택: ${chosen} | 정답: ${correct}`;
-
             return {
                 idx,
-                question: q.question,
-                options: q.options,
+                question: q,
+                options,
                 correctIndex,
                 selectedIndex,
                 isAnswered: !!isAnswered,
                 isCorrect,
-                explanation: q.explanation,
-                summaryText,
+                explanation: it.explanation ?? null,
             };
         });
-    }, [questions, answersByIdx]);
+    }, [items]);
 
-    // States
-    const [filterMode, setFilterMode] = useState<FilterMode>('all');
-    const [expanded, setExpanded] = useState<Set<number>>(new Set());
-    const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
-
-    const filtered: Derived[] = useMemo(() => {
-        switch (filterMode) {
-            case 'incorrect':
-                return derivedAll.filter(d => d.isAnswered && !d.isCorrect);
-            case 'unanswered':
-                return derivedAll.filter(d => !d.isAnswered);
-            default:
-                return derivedAll;
-        }
-    }, [derivedAll, filterMode]);
-
+    // 통계
     const totals = useMemo(() => {
         const total = derivedAll.length;
         const correct = derivedAll.filter(d => d.isCorrect).length;
@@ -118,14 +59,26 @@ export default function ReviewPage() {
         return { total, correct, incorrect, unanswered, rate };
     }, [derivedAll]);
 
+    // 필터/펼침/포커스 상태
+    const [filterMode, setFilterMode] = useState<FilterMode>('all');
+    const [expanded, setExpanded] = useState<Set<number>>(new Set());
+    const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+
+    const filtered = useMemo(() => {
+        switch (filterMode) {
+            case 'incorrect': return derivedAll.filter(d => d.isAnswered && !d.isCorrect);
+            case 'unanswered': return derivedAll.filter(d => !d.isAnswered);
+            default: return derivedAll;
+        }
+    }, [derivedAll, filterMode]);
+
     const incorrectIdxs = useMemo(
         () => derivedAll.filter(d => d.isAnswered && !d.isCorrect).map(d => d.idx),
         [derivedAll]
     );
-
     const [currentFocusIdx, setCurrentFocusIdx] = useState<number | null>(incorrectIdxs[0] ?? null);
 
-    // Event handlers
+    // UI 핸들러
     const toggleExpand = (idx: number) => {
         setExpanded(prev => {
             const next = new Set(prev);
@@ -133,7 +86,6 @@ export default function ReviewPage() {
             return next;
         });
     };
-
     const expandAll = () => setExpanded(new Set(derivedAll.map(d => d.idx)));
     const collapseAll = () => setExpanded(new Set());
 
@@ -149,65 +101,61 @@ export default function ReviewPage() {
             });
         }
     };
-
     const goPrevIncorrect = () => {
         if (incorrectIdxs.length === 0) return;
         if (currentFocusIdx === null) return scrollToIdx(incorrectIdxs[0]);
-
         const curPos = incorrectIdxs.findIndex(i => i === currentFocusIdx);
         const prevIdx = curPos > 0 ? incorrectIdxs[curPos - 1] : incorrectIdxs[incorrectIdxs.length - 1];
         scrollToIdx(prevIdx);
     };
-
     const goNextIncorrect = () => {
         if (incorrectIdxs.length === 0) return;
         if (currentFocusIdx === null) return scrollToIdx(incorrectIdxs[0]);
-
         const curPos = incorrectIdxs.findIndex(i => i === currentFocusIdx);
-        const nextIdx = curPos >= 0 && curPos < incorrectIdxs.length - 1 ?
-            incorrectIdxs[curPos + 1] : incorrectIdxs[0];
+        const nextIdx = curPos >= 0 && curPos < incorrectIdxs.length - 1 ? incorrectIdxs[curPos + 1] : incorrectIdxs[0];
         scrollToIdx(nextIdx);
     };
 
-    const handleRestart = () => {
-        resetAll();
-        router.push('/question/quick');
-    };
+    const handleRestart = () => router.push('/question/quick');
+    const handleGoHome = () => router.push('/');
 
-    const handleGoHome = () => {
-        resetAll();
-        router.push('/');
-    };
+    // 가드: 빈 데이터
+    if (!items || items.length === 0) {
+        return (
+            <div className="page-background">
+                <div className="container">
+                    <div className={styles.noDataMessage}>
+                        <div className={styles.noDataIcon}>📝</div>
+                        <h2>리뷰 데이터를 찾을 수 없습니다</h2>
+                        <button onClick={handleGoHome} className={styles.primaryButton}>
+                            홈으로 돌아가기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="page-background">
             <div className="container">
-                {/* Header Section */}
+                {/* Header */}
                 <div className={styles.header}>
                     <div className={styles.resultIcon}>
                         {totals.rate >= 70 ? '🎉' : '📚'}
                     </div>
                     <h1 className={styles.pageTitle}>퀴즈 결과 리뷰</h1>
 
-                    {/* Score Summary */}
+                    {/* Score Summary (서버 attempt 값도 함께 사용 가능) */}
                     <div className={styles.scoreCard}>
                         <div className={styles.mainScore}>
                             <span className={styles.scoreNumber}>{totals.rate}%</span>
                             <span className={styles.scoreLabel}>정답률</span>
                         </div>
                         <div className={styles.scoreDetails}>
-                            <div className={styles.scoreItem}>
-                                <span className={styles.scoreIcon}>✅</span>
-                                <span>정답 {totals.correct}개</span>
-                            </div>
-                            <div className={styles.scoreItem}>
-                                <span className={styles.scoreIcon}>❌</span>
-                                <span>오답 {totals.incorrect}개</span>
-                            </div>
-                            <div className={styles.scoreItem}>
-                                <span className={styles.scoreIcon}>⏸️</span>
-                                <span>미응답 {totals.unanswered}개</span>
-                            </div>
+                            <div className={styles.scoreItem}><span className={styles.scoreIcon}>✅</span><span>정답 {totals.correct}개</span></div>
+                            <div className={styles.scoreItem}><span className={styles.scoreIcon}>❌</span><span>오답 {totals.total - totals.correct - totals.unanswered}개</span></div>
+                            <div className={styles.scoreItem}><span className={styles.scoreIcon}>⏸️</span><span>미응답 {totals.unanswered}개</span></div>
                         </div>
                     </div>
                 </div>
@@ -223,7 +171,7 @@ export default function ReviewPage() {
                                 className={styles.filterSelect}
                             >
                                 <option value="all">전체 문제 ({derivedAll.length})</option>
-                                <option value="incorrect">오답만 ({totals.incorrect})</option>
+                                <option value="incorrect">오답만 ({totals.total - totals.correct - totals.unanswered})</option>
                                 <option value="unanswered">미응답만 ({totals.unanswered})</option>
                             </select>
                         </label>
@@ -231,32 +179,15 @@ export default function ReviewPage() {
 
                     <div className={styles.actionSection}>
                         <div className={styles.expandControls}>
-                            <button className={styles.controlButton} onClick={collapseAll}>
-                                모두 접기
-                            </button>
-                            <button className={styles.controlButton} onClick={expandAll}>
-                                모두 펼치기
-                            </button>
+                            <button className={styles.controlButton} onClick={collapseAll}>모두 접기</button>
+                            <button className={styles.controlButton} onClick={expandAll}>모두 펼치기</button>
                         </div>
-
                         <div className={styles.navigationControls}>
-                            <button
-                                className={styles.navButton}
-                                onClick={goPrevIncorrect}
-                                disabled={incorrectIdxs.length === 0}
-                            >
-                                ← 이전 오답
-                            </button>
+                            <button className={styles.navButton} onClick={goPrevIncorrect} disabled={incorrectIdxs.length === 0}>← 이전 오답</button>
                             <span className={styles.navInfo}>
                                 {incorrectIdxs.length > 0 ? `${incorrectIdxs.length}개 오답` : '오답 없음'}
                             </span>
-                            <button
-                                className={styles.navButton}
-                                onClick={goNextIncorrect}
-                                disabled={incorrectIdxs.length === 0}
-                            >
-                                다음 오답 →
-                            </button>
+                            <button className={styles.navButton} onClick={goNextIncorrect} disabled={incorrectIdxs.length === 0}>다음 오답 →</button>
                         </div>
                     </div>
                 </div>
@@ -270,17 +201,16 @@ export default function ReviewPage() {
                         </div>
                     ) : (
                         <div className={styles.questionsList}>
-                            {filtered.map((data) => (
+                            {filtered.map((d) => (
                                 <QuestionCard
-                                    key={data.idx}
-                                    data={data}
-                                    isOpen={expanded.has(data.idx)}
-                                    onToggle={() => toggleExpand(data.idx)}
-                                    isFocused={currentFocusIdx === data.idx}
+                                    key={d.idx}
+                                    data={d}
+                                    isOpen={expanded.has(d.idx)}
+                                    onToggle={() => toggleExpand(d.idx)}
+                                    isFocused={currentFocusIdx === d.idx}
                                     registerRef={(el) => {
                                         const map = cardRefs.current;
-                                        if (el) map.set(data.idx, el);
-                                        else map.delete(data.idx);
+                                        if (el) map.set(d.idx, el); else map.delete(d.idx);
                                     }}
                                 />
                             ))}
@@ -290,25 +220,16 @@ export default function ReviewPage() {
 
                 {/* Footer Actions */}
                 <div className={styles.actionButtons}>
-                    <button onClick={handleRestart} className={styles.primaryButton}>
-                        다시 풀기
-                    </button>
-                    <button onClick={handleGoHome} className={styles.secondaryButton}>
-                        홈으로 돌아가기
-                    </button>
+                    <button onClick={handleRestart} className={styles.primaryButton}>다시 풀기</button>
+                    <button onClick={handleGoHome} className={styles.secondaryButton}>홈으로 돌아가기</button>
                 </div>
             </div>
         </div>
     );
 }
 
-// Question Card Component
 function QuestionCard({
-    data,
-    isOpen,
-    onToggle,
-    isFocused,
-    registerRef,
+    data, isOpen, onToggle, isFocused, registerRef,
 }: {
     data: Derived;
     isOpen: boolean;
@@ -316,96 +237,80 @@ function QuestionCard({
     isFocused: boolean;
     registerRef: (el: HTMLDivElement | null) => void;
 }) {
-    const {
-        idx, question, options, correctIndex, selectedIndex,
-        isAnswered, isCorrect, explanation
-    } = data;
+    const { idx, question, options, correctIndex, selectedIndex, isAnswered, isCorrect, explanation } = data;
 
-    const getStatusIcon = () => {
-        if (!isAnswered) return '⏸️';
-        return isCorrect ? '✅' : '❌';
-    };
-
-    const getStatusText = () => {
-        if (!isAnswered) return '미응답';
-        return isCorrect ? '정답' : '오답';
-    };
-
-    const getStatusClass = () => {
-        if (!isAnswered) return styles.statusUnanswered;
-        return isCorrect ? styles.statusCorrect : styles.statusIncorrect;
-    };
+    const getStatusIcon = () => (!isAnswered ? '⏸️' : isCorrect ? '✅' : '❌');
+    const getStatusText = () => (!isAnswered ? '미응답' : isCorrect ? '정답' : '오답');
 
     return (
-        <div
-            className={`${styles.questionCard} ${isFocused ? styles.focused : ''}`}
-            ref={registerRef}
-        >
-            {/* Card Header */}
+        <div className={`${styles.questionCard} ${isFocused ? styles.focused : ''}`} ref={registerRef}>
             <div className={styles.cardHeader}>
                 <div className={styles.questionInfo}>
                     <span className={styles.questionNumber}>Q{idx + 1}</span>
-                    <div className={`${styles.statusBadge} ${getStatusClass()}`}>
+                    <div className={`${styles.statusBadge} ${!isAnswered ? styles.statusUnanswered : isCorrect ? styles.statusCorrect : styles.statusIncorrect}`}>
                         <span className={styles.statusIcon}>{getStatusIcon()}</span>
                         <span className={styles.statusText}>{getStatusText()}</span>
                     </div>
                 </div>
-                <button
-                    className={`${styles.toggleButton} ${isOpen ? styles.active : ''}`}
-                    onClick={onToggle}
-                    aria-expanded={isOpen}
-                >
+                <button className={`${styles.toggleButton} ${isOpen ? styles.active : ''}`} onClick={onToggle} aria-expanded={isOpen}>
                     {isOpen ? '해설 닫기' : '해설 보기'}
                 </button>
             </div>
 
-            {/* Question Preview */}
             <div className={styles.questionPreview}>
                 <p className={styles.questionText}>{question}</p>
                 <div className={styles.answerSummary}>
                     <div className={styles.summaryItem}>
                         <span className={styles.summaryLabel}>내 선택:</span>
                         <span className={`${styles.summaryValue} ${!isAnswered ? styles.noAnswer : (isCorrect ? styles.correct : styles.incorrect)}`}>
-                            {!isAnswered ? '답안 없음' :
-                                selectedIndex !== null ? `${getOptionLetter(selectedIndex)}. ${options[selectedIndex]}` : '답안 없음'}
+                            {!isAnswered
+                                ? '답안 없음'
+                                : (selectedIndex !== null && options[selectedIndex] !== undefined)
+                                    ? `${getOptionLetter(selectedIndex)}. ${options[selectedIndex]}`
+                                    : '답안 없음'}
                         </span>
                     </div>
                     <div className={styles.summaryItem}>
                         <span className={styles.summaryLabel}>정답:</span>
                         <span className={`${styles.summaryValue} ${styles.correctAnswer}`}>
-                            {getOptionLetter(correctIndex)}. {options[correctIndex]}
+                            {options[correctIndex] !== undefined
+                                ? `${getOptionLetter(correctIndex)}. ${options[correctIndex]}`
+                                : `${getOptionLetter(correctIndex)}. (옵션 누락)`}
                         </span>
                     </div>
                 </div>
             </div>
 
-            {/* Expandable Content */}
             {isOpen && (
                 <div className={styles.expandedContent}>
                     <div className={styles.optionsList}>
                         <h4 className={styles.sectionTitle}>선택지</h4>
-                        {options.map((option, i) => {
-                            const isSelectedOption = i === selectedIndex;
-                            const isCorrectOption = i === correctIndex;
+                        {options.length === 0 ? (
+                            <div className={styles.emptyOption}>옵션 데이터가 없습니다.</div>
+                        ) : (
+                            options.map((option, i) => {
+                                const isSelectedOption = i === selectedIndex;
+                                const isCorrectOption = i === correctIndex;
 
-                            let optionClass = styles.option;
-                            if (isCorrectOption) optionClass += ` ${styles.correctOption}`;
-                            if (isSelectedOption && !isCorrectOption) optionClass += ` ${styles.wrongOption}`;
-                            if (isSelectedOption && isCorrectOption) optionClass += ` ${styles.correctSelectedOption}`;
+                                let optionClass = styles.option;
+                                if (isCorrectOption) optionClass += ` ${styles.correctOption}`;
+                                if (isSelectedOption && !isCorrectOption) optionClass += ` ${styles.wrongOption}`;
+                                if (isSelectedOption && isCorrectOption) optionClass += ` ${styles.correctSelectedOption}`;
 
-                            return (
-                                <div key={i} className={optionClass}>
-                                    <div className={styles.optionHeader}>
-                                        <span className={styles.optionLetter}>{getOptionLetter(i)}</span>
-                                        <div className={styles.optionIndicators}>
-                                            {isCorrectOption && <span className={styles.correctIndicator}>정답</span>}
-                                            {isSelectedOption && <span className={styles.selectedIndicator}>선택함</span>}
+                                return (
+                                    <div key={i} className={optionClass}>
+                                        <div className={styles.optionHeader}>
+                                            <span className={styles.optionLetter}>{getOptionLetter(i)}</span>
+                                            <div className={styles.optionIndicators}>
+                                                {isCorrectOption && <span className={styles.correctIndicator}>정답</span>}
+                                                {isSelectedOption && <span className={styles.selectedIndicator}>선택함</span>}
+                                            </div>
                                         </div>
+                                        <p className={styles.optionText}>{option}</p>
                                     </div>
-                                    <p className={styles.optionText}>{option}</p>
-                                </div>
-                            );
-                        })}
+                                );
+                            })
+                        )}
                     </div>
 
                     {!isAnswered && (

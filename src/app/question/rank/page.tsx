@@ -14,6 +14,7 @@ export default async function RankPage() {
 
     // 랜덤 MCQ 4지선다 10문
     const questions = await findQuickStartMcqItems(10);
+    const clerkUserId = user.id;
     return (
         <main>
             <RankingPage questions={questions} />
