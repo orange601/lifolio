@@ -88,6 +88,16 @@ export default function QuizHomepage() {
                 <div className={styles.featureIcon}>⚙️</div>
                 <div className={styles.featureText}>설정</div>
               </Link>
+              {/* 경쟁 모드 */}
+              <Link
+                href="/rank"
+                className={`${styles.featureItem} ${styles.featureLink}`}
+                role="button"
+                aria-label="순위"
+              >
+                <div className={styles.featureIcon}>🏆</div>
+                <div className={styles.featureText}>순위</div>
+              </Link>
             </div>
           </div>
         </div>
