@@ -1,0 +1,854 @@
+/* Page Background - 기존 global 스타일 사용 */
+/* .page-background와 .container는 이미 글로벌에 정의되어 있음 */
+
+/* Header Section */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.resultIcon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 2.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.pageTitle {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.scoreCard {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 25px;
+}
+
+.mainScore {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.scoreNumber {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: white;
+    display: block;
+}
+
+.scoreLabel {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.scoreDetails {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.scoreItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: white;
+}
+
+.scoreIcon {
+    font-size: 14px;
+}
+
+/* Control Panel */
+.controlPanel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.filterSection {
+    margin-bottom: 15px;
+}
+
+.filterLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.filterLabelText {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.filterSelect {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+}
+
+.filterSelect:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.actionSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.expandControls {
+    display: flex;
+    gap: 8px;
+}
+
+.controlButton {
+    flex: 1;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.controlButton:hover {
+    background: #e9ecef;
+    border-color: #ced4da;
+}
+
+.navigationControls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    gap: 8px;
+}
+
+.navButton {
+    padding: 6px 10px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.navButton:hover:not(:disabled) {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.navButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.navInfo {
+    font-size: 0.75rem;
+    color: #777;
+    font-weight: 500;
+    text-align: center;
+    flex: 1;
+}
+
+/* Questions Container */
+.questionsContainer {
+    margin-bottom: 25px;
+}
+
+.questionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.emptyIcon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.emptyState p {
+    color: #666;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Question Card */
+.questionCard {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.questionCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.questionCard.focused {
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+}
+
+.cardHeader {
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.questionInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.questionNumber {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #667eea;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.statusBadge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.statusCorrect {
+    background: linear-gradient(45deg, #4CAF50, #66BB6A);
+    color: white;
+}
+
+.statusIncorrect {
+    background: linear-gradient(45deg, #f44336, #ef5350);
+    color: white;
+}
+
+.statusUnanswered {
+    background: linear-gradient(45deg, #ff9800, #ffa726);
+    color: white;
+}
+
+.statusIcon {
+    font-size: 12px;
+}
+
+.statusText {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.toggleButton {
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toggleButton:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.toggleButton.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* Question Preview */
+.questionPreview {
+    padding: 20px;
+}
+
+.questionText {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.5;
+    margin: 0 0 15px 0;
+}
+
+.answerSummary {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 15px;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+}
+
+.summaryItem {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.summaryLabel {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #667eea;
+    min-width: 50px;
+    flex-shrink: 0;
+}
+
+.summaryValue {
+    font-size: 0.85rem;
+    font-weight: 500;
+    flex: 1;
+}
+
+.summaryValue.correct {
+    color: #4CAF50;
+}
+
+.summaryValue.incorrect {
+    color: #f44336;
+}
+
+.summaryValue.noAnswer {
+    color: #999;
+    font-style: italic;
+}
+
+.summaryValue.correctAnswer {
+    color: #4CAF50;
+    font-weight: 600;
+}
+
+/* Expanded Content */
+.expandedContent {
+    padding: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(102, 126, 234, 0.02);
+}
+
+.sectionTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.optionsList {
+    margin-bottom: 20px;
+}
+
+.option {
+    background: white;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+}
+
+.correctOption {
+    background: linear-gradient(45deg, #4CAF50, #66BB6A);
+    color: white;
+    border-color: #4CAF50;
+}
+
+.wrongOption {
+    background: linear-gradient(45deg, #f44336, #ef5350);
+    color: white;
+    border-color: #f44336;
+}
+
+.correctSelectedOption {
+    background: linear-gradient(45deg, #4CAF50, #66BB6A);
+    color: white;
+    border-color: #4CAF50;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.optionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.optionLetter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.3);
+    color: #333;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.correctOption .optionLetter,
+.correctSelectedOption .optionLetter {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.wrongOption .optionLetter {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.optionIndicators {
+    display: flex;
+    gap: 6px;
+}
+
+.correctIndicator {
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.selectedIndicator {
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.optionText {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* No Answer Notice */
+.noAnswerNotice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.noticeIcon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.noAnswerNotice p {
+    margin: 0;
+    color: #856404;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Explanation Section */
+.explanationSection {
+    background: rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.explanationContent {
+    background: white;
+    border-radius: 6px;
+    padding: 15px;
+    border-left: 3px solid #667eea;
+}
+
+.explanationContent p {
+    margin: 0;
+    color: #333;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* No Data State */
+.noDataMessage {
+    text-align: center;
+    padding: 40px 20px;
+    color: white;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.noDataIcon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.noDataMessage h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.noDataMessage p {
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    opacity: 0.9;
+}
+
+/* Action Buttons */
+.actionButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.primaryButton {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    letter-spacing: 0.5px;
+}
+
+.primaryButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.primaryButton:active {
+    transform: translateY(0);
+}
+
+.secondaryButton {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.secondaryButton:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.secondaryButton:active {
+    transform: translateY(0);
+}
+
+.ghostButton {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ghostButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    .scoreDetails {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .scoreItem {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    .actionSection {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .expandControls {
+        gap: 10px;
+    }
+
+    .navigationControls {
+        min-width: 250px;
+    }
+
+    .cardHeader {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .questionInfo {
+        gap: 12px;
+    }
+
+    .actionButtons {
+        flex-direction: row;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .primaryButton,
+    .secondaryButton {
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pageTitle {
+        font-size: 1.5rem;
+    }
+
+    .scoreNumber {
+        font-size: 1.8rem;
+    }
+
+    .scoreDetails {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .scoreItem {
+        font-size: 0.75rem;
+    }
+
+    .controlPanel {
+        padding: 15px;
+    }
+
+    .cardHeader {
+        padding: 15px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .questionInfo {
+        justify-content: center;
+    }
+
+    .questionPreview {
+        padding: 15px;
+    }
+
+    .questionText {
+        font-size: 1rem;
+    }
+
+    .answerSummary {
+        padding: 12px;
+    }
+
+    .summaryItem {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .summaryLabel {
+        min-width: auto;
+    }
+
+    .optionHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .optionIndicators {
+        flex-wrap: wrap;
+    }
+
+    .expandedContent {
+        padding: 15px;
+    }
+
+    .optionText {
+        font-size: 0.85rem;
+    }
+
+    .explanationContent {
+        padding: 12px;
+    }
+
+    .explanationContent p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Focus and Accessibility */
+.filterSelect:focus,
+.controlButton:focus,
+.navButton:focus,
+.toggleButton:focus,
+.primaryButton:focus,
+.secondaryButton:focus,
+.ghostButton:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .questionCard {
+        border: 2px solid #000;
+    }
+
+    .statusBadge {
+        border: 1px solid #000;
+    }
+
+    .option {
+        border: 2px solid #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+
+    .questionCard,
+    .primaryButton,
+    .secondaryButton,
+    .ghostButton,
+    .controlButton,
+    .navButton,
+    .toggleButton {
+        transition: none;
+    }
+
+    .questionCard {
+        animation: none;
+    }
+
+    .header,
+    .actionButtons {
+        animation: none;
+    }
+
+    .primaryButton:hover,
+    .secondaryButton:hover {
+        transform: none;
+    }
+}
