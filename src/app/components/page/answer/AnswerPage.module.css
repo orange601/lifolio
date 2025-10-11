@@ -1,0 +1,216 @@
+/* AnswerPage.module.css */
+
+/* 메인 카드 컨테이너 */
+.contentCard {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+
+    animation: fadeInUp 0.3s ease-out both;
+}
+
+/* 정답/오답 헤더 */
+.resultHeader {
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: white;
+}
+
+.resultHeader.correct {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+}
+
+.resultHeader.incorrect {
+    background: linear-gradient(135deg, #f44336, #ef5350);
+}
+
+.resultIcon {
+    font-size: 18px;
+}
+
+.resultText {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* 카드 내부 콘텐츠 영역 */
+.content {
+    padding: 24px;
+}
+
+.section {
+    margin-bottom: 24px;
+}
+
+.section:last-child {
+    margin-bottom: 0;
+}
+
+.sectionTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 문제 텍스트 */
+.question {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+    font-weight: 500;
+}
+
+/* 정답 박스 */
+.answer {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    padding: 12px;
+    background: #e8f5e9;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+}
+
+/* 해설 박스 */
+.explanation {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #555;
+    padding: 16px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border-left: 4px solid #2196F3;
+}
+
+/* 버튼 그룹 */
+.buttonGroup {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btnPrimary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btnPrimary:hover {
+    background: linear-gradient(135deg, #5568d3, #6a3f8f);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* 애니메이션 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+    .content {
+        padding: 20px;
+    }
+
+    .question {
+        font-size: 16px;
+    }
+
+    .answer {
+        font-size: 15px;
+        padding: 10px;
+    }
+
+    .explanation {
+        font-size: 14px;
+        padding: 14px;
+    }
+
+    .btn {
+        font-size: 15px;
+        padding: 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    .resultHeader {
+        padding: 12px 20px;
+    }
+
+    .resultIcon {
+        font-size: 16px;
+    }
+
+    .resultText {
+        font-size: 14px;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
+    .section {
+        margin-bottom: 20px;
+    }
+
+    .sectionTitle {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .question {
+        font-size: 15px;
+    }
+
+    .answer {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .explanation {
+        font-size: 13px;
+        padding: 12px;
+    }
+
+    .buttonGroup {
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 13px;
+    }
+}

@@ -1,73 +1,51 @@
+/* ToDashboardButton.module.css */
+
 .actionButton {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 18px 32px;
-    border: none;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 0.5px;
-    position: relative;
-    overflow: hidden;
+    gap: 8px;
 }
 
-.actionButton::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.actionButton:active::before {
-    width: 300px;
-    height: 300px;
-}
-
-.actionButton:hover .buttonIcon {
-    transform: scale(1.1);
-}
-
-@media (min-width: 768px) {
-    .actionButtons {
-        flex-direction: row;
-        justify-content: center;
-        gap: 20px;
-    }
-
-    .actionButton {
-        flex: 0 0 auto;
-        min-width: 200px;
-    }
-}
-
+/* 흰색 배경에서 보이는 세컨더리 스타일 */
 .tertiary {
-    background: transparent;
-    color: rgba(255, 255, 255, 0.9);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: white;
+    color: #667eea;
+    border: 2px solid #e0e0e0;
 }
 
 .tertiary:hover {
-    color: white;
-    border-color: rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-3px);
+    color: #667eea;
+    border-color: #667eea;
+    background: #f8f9ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
 
 .buttonIcon {
     font-size: 1.2rem;
-    transition: transform 0.3s ease;
 }
 
-.actionButton:hover .buttonIcon {
-    transform: scale(1.1);
+/* 반응형 */
+@media (max-width: 480px) {
+    .actionButton {
+        font-size: 15px;
+        padding: 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    .actionButton {
+        font-size: 14px;
+        padding: 13px;
+    }
 }

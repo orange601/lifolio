@@ -2,8 +2,8 @@
 'use client';
 
 import type { QuizItem } from "@/core/repositroy/questions/question.type";
-import React, { useState, useRef } from 'react';
-import AnswerPage from './AnswerPage';
+import React, { useState, useRef, useEffect } from 'react';
+import AnswerPage from '@/app/components/page/answer/AnswerPage';
 import ResultQuizPage from '@/app/components/page/ResultQuizPage';
 import styles from './QuickCascader.module.css';
 import { useRouter } from 'next/navigation';
@@ -49,7 +49,7 @@ export default function QuickQuestionPage({ quickQuestions }: Props) {
     const timerRef = useRef<QuizTimerRef>(null);
 
     // 각 문제 제한시간(초)
-    const DURATION = 30;
+    const DURATION = 20;
 
     // 현재 문제/번호/총 개수
     const totalQuestions = quickQuestions.length;
@@ -111,10 +111,12 @@ export default function QuickQuestionPage({ quickQuestions }: Props) {
         evaluateAnswer(index, false);
     };
 
-    // 시간 초과 시(타이머 콜백)
+    // 시간 초과 시(타이머 콜백) - useEffect로 비동기 처리
     const handleTimeOver = () => {
-        // 선택 없이 시간 초과 → selectedIndex=null, timeOver=true
-        evaluateAnswer(null, true);
+        // setTimeout으로 렌더링 사이클 밖으로 이동
+        setTimeout(() => {
+            evaluateAnswer(null, true);
+        }, 0);
     };
 
     // 다음 문제로 이동(마지막 문제면 완료 화면)

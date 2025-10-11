@@ -79,7 +79,7 @@ export default function QuizHomepage() {
               </Link>
 
               {/* 설정 */}
-              <Link
+              {/* <Link
                 href="/auth/choice"
                 className={`${styles.featureItem} ${styles.featureLink}`}
                 role="button"
@@ -87,7 +87,7 @@ export default function QuizHomepage() {
               >
                 <div className={styles.featureIcon}>⚙️</div>
                 <div className={styles.featureText}>설정</div>
-              </Link>
+              </Link> */}
               {/* 경쟁 모드 */}
               <Link
                 href="/rank"

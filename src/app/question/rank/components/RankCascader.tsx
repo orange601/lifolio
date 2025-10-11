@@ -8,6 +8,7 @@ import type { QuizItem } from "@/core/repositroy/questions/question.type";
 import { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
 import QuizContainer from '@/app/components/page/quiz/QuizContainer';
 import RankContainerHeader from './RankContainerHeader';
+import Loading from '@/app/components/ui/loading/loading'
 
 type Props = {
     questions: QuizItem[];
@@ -27,7 +28,7 @@ export default function RankPage({ questions }: Props) {
         id: (q as any).id ?? null,
     }));
 
-    const DURATION = 5;
+    const DURATION = 10;
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -68,8 +69,12 @@ export default function RankPage({ questions }: Props) {
     const handleTimeOver = () => {
         const qIdx = currentQuestionIndex;
         if (!commitOnce(qIdx)) return;
-        setSelectedAnswer(null);
-        commitAnswer(null, true);
+
+        // setTimeout으로 다음 이벤트 루프에서 실행
+        setTimeout(() => {
+            setSelectedAnswer(null);
+            commitAnswer(null, true);
+        }, 0);
     };
 
     const handleOptionClick = (index: number) => {
@@ -184,10 +189,9 @@ export default function RankPage({ questions }: Props) {
                     onSelect={handleOptionClick}
                 />
 
+                {/* 전체 화면 로딩 오버레이 */}
                 {submitting && (
-                    <div style={{ marginTop: 12, fontSize: 12, opacity: 0.7 }}>
-                        결과 저장 중…
-                    </div>
+                    <Loading />
                 )}
             </div>
         </div>
