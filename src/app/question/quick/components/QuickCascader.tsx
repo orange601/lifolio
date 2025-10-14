@@ -9,6 +9,8 @@ import styles from './QuickCascader.module.css';
 import { useRouter } from 'next/navigation';
 import ContainerHeaderBackButton from "@/app/components/ui/backButton/HeaderBackButton";
 import QuizTimer, { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
+import ProgressBar from '@/app/components/ui/progressbar/ProgressBar';
+import ProgressQuestionNumberPage from '@/app/components/ui/questionNumber/progressQuestionNumber';
 
 type Props = {
     quickQuestions: (QuizItem & {
@@ -189,14 +191,10 @@ export default function QuickQuestionPage({ quickQuestions }: Props) {
                         <ContainerHeaderBackButton onBack={goBack} />
                     </div>
 
-                    <div className={styles.headerCenter}>
-                        <div className={styles.progressInfo}>
-                            <span className={styles.currentQuestion}>{currentQuestionNum}</span>
-                            <span className={styles.separator}>/</span>
-                            <span className={styles.totalQuestions}>{totalQuestions}</span>
-                        </div>
-                        <div className={styles.progressLabel}>문제</div>
-                    </div>
+                    <ProgressQuestionNumberPage
+                        currentQuestion={currentQuestionNum}
+                        totalQuestions={totalQuestions}
+                    />
 
                     <div className={styles.headerRight}>
                         <QuizTimer
@@ -210,9 +208,10 @@ export default function QuickQuestionPage({ quickQuestions }: Props) {
                 </div>
 
                 {/* Progress Bar */}
-                <div className={styles.progressBarContainer}>
-                    <div className={styles.progressBar} style={{ width: `${progressPercentage}%` }} />
-                </div>
+                <ProgressBar
+                    current={currentQuestionNum}
+                    total={totalQuestions}
+                />
 
                 {/* Quiz Container */}
                 <div className={styles.quizContainer}>
