@@ -8,10 +8,10 @@ import styles from './QuizContainer.module.css';
 import React from 'react';
 
 type QuizContainerProps = {
-    questionNumber: number;           // 현재 문제 번호(1-based)
-    questionText: string;             // 문제 텍스트
-    options: string[];                // 보기 목록
-    selectedIndex: number | null;     // 선택된 보기 인덱스 (없으면 null)
+    questionNumber: number; // 현재 문제 번호(1-based)
+    questionText: string; // 문제 텍스트
+    options: string[]; // 보기 목록
+    selectedIndex: number | null; // 선택된 보기 인덱스 (없으면 null)
     onSelect: (index: number) => void; // 보기 선택 핸들러
 };
 

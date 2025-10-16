@@ -9,6 +9,8 @@ import QuizTimer, { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
 import { useQuizResultStore } from '@/app/store/review/quizResultStore';
 import type { QuizItem } from "@/core/repositroy/questions/question.type";
 import QuizContainer from '@/app/components/page/quiz/QuizContainer';
+import ProgressQuestionNumberPage from '@/app/components/ui/questionNumber/progressQuestionNumber';
+import ProgressBar from '@/app/components/ui/progressbar/ProgressBar';
 
 type Props = {
     initialQuestions: (QuizItem & {
@@ -21,7 +23,7 @@ type Props = {
 export default function BatchPage({ initialQuestions }: Props) {
     const router = useRouter();
 
-    // ✅ 랭킹과 동일 API 사용
+    // 랭킹과 동일 API 사용
     const {
         setQuestions,
         addUserAnswer,
@@ -87,8 +89,6 @@ export default function BatchPage({ initialQuestions }: Props) {
 
     const goBack = () => router.push('/');
 
-    const progressPercentage = (currentQuestionNum / totalQuestions) * 100;
-
     return (
         <div className="page-background">
             <div className="container">
@@ -98,14 +98,10 @@ export default function BatchPage({ initialQuestions }: Props) {
                         <ContainerHeaderBackButton onBack={goBack} />
                     </div>
 
-                    <div className={styles.headerCenter}>
-                        <div className={styles.progressInfo}>
-                            <span className={styles.currentQuestion}>{currentQuestionNum}</span>
-                            <span className={styles.separator}>/</span>
-                            <span className={styles.totalQuestions}>{totalQuestions}</span>
-                        </div>
-                        <div className={styles.progressLabel}>문제</div>
-                    </div>
+                    <ProgressQuestionNumberPage
+                        currentQuestion={currentQuestionNum}
+                        totalQuestions={totalQuestions}
+                    />
 
                     <div className={styles.headerRight}>
                         <QuizTimer
@@ -119,9 +115,10 @@ export default function BatchPage({ initialQuestions }: Props) {
                 </div>
 
                 {/* Progress Bar */}
-                <div className={styles.progressBarContainer}>
-                    <div className={styles.progressBar} style={{ width: `${progressPercentage}%` }} />
-                </div>
+                <ProgressBar
+                    current={currentQuestionNum}
+                    total={totalQuestions}
+                />
 
                 {/* Quiz */}
                 <QuizContainer

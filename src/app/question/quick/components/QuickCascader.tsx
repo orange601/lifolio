@@ -11,6 +11,7 @@ import ContainerHeaderBackButton from "@/app/components/ui/backButton/HeaderBack
 import QuizTimer, { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
 import ProgressBar from '@/app/components/ui/progressbar/ProgressBar';
 import ProgressQuestionNumberPage from '@/app/components/ui/questionNumber/progressQuestionNumber';
+import QuizContainer from '@/app/components/page/quiz/QuizContainer';
 
 type Props = {
     quickQuestions: (QuizItem & {
@@ -214,26 +215,13 @@ export default function QuickQuestionPage({ quickQuestions }: Props) {
                 />
 
                 {/* Quiz Container */}
-                <div className={styles.quizContainer}>
-                    <div className={styles.questionCard}>
-                        <div className={styles.questionNumber}>Question {currentQuestionNum}</div>
-                        <div className={styles.questionText}>{currentQuestion.question}</div>
-
-                        <div className={styles.optionsContainer}>
-                            {currentQuestion.options.map((option, index) => (
-                                <div
-                                    key={index}
-                                    className={`${styles.option} ${selectedAnswer === index ? styles.selected : ''}`}
-                                    onClick={() => handleOptionClick(index)}
-                                >
-                                    <div className={styles.optionLetter}>{getOptionLetter(index)}</div>
-                                    <div className={styles.optionText}>{option}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
+                <QuizContainer
+                    questionNumber={currentQuestionNum}
+                    questionText={currentQuestion.question}
+                    options={currentQuestion.options}
+                    selectedIndex={selectedAnswer}
+                    onSelect={(idx) => handleOptionClick(idx)}
+                />
             </div>
         </div>
     );
