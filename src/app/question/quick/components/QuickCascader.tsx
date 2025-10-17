@@ -143,9 +143,6 @@ export default function QuickQuestionPage({ quickQuestions }: Props) {
     // 상단 뒤로가기
     const goBack = () => router.push("/");
 
-    // 진행률(퍼센트)
-    const progressPercentage = (currentQuestionNum / totalQuestions) * 100;
-
     // 완료 화면
     if (showCompletion) {
         return (

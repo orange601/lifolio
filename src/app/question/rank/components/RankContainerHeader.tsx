@@ -26,7 +26,9 @@ const RankContainerHeader = forwardRef<QuizTimerRef, RankContainerHeaderProps>(
         return (
             <div className="container-header">
                 <div className={styles.headerLeft}>
-                    <QuizContainerHeaderBackButton onBack={onBack} />
+                    <QuizContainerHeaderBackButton
+                        onBack={onBack}
+                    />
                 </div>
 
                 <div className={styles.headerCenter}>
