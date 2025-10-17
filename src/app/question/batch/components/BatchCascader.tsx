@@ -53,11 +53,10 @@ export default function BatchPage({ initialQuestions }: Props) {
         resetAll();
         setQuestions(normalized);
         startTimer();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const commitAnswer = (selectedIndex: number | null, timeOver = false) => {
-        // 저장만(즉시 해설 X) — 랭킹과 동일하게 answers에만 누적
+        // 저장만
         addUserAnswer({
             questionIndex: currentQuestionIndex,
             selectedIndex: timeOver ? null : selectedIndex,
