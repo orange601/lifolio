@@ -35,12 +35,10 @@ export default function AnswerCascaderPage() {
     };
 
     const handleReview = () => {
-        // 리뷰 상세 페이지(추후 구현)로 이동만
         router.push('/review');
     };
 
     const handleRetry = () => {
-        // 필요시 재도전 플로우로 이동 (임시로 홈)
         resetAll();
         router.push('/');
     };
@@ -49,11 +47,11 @@ export default function AnswerCascaderPage() {
         return (
             <div className="page-background">
                 <div className="container">
-                    <div className={styles.noDataMessage}>
-                        <h2>결과를 찾을 수 없습니다</h2>
-                        <button onClick={handleGoToDashboard} className={styles.primaryButton}>
+                    <div className={styles.resultCard}>
+                        <h2 className={styles.noDataTitle}>결과를 찾을 수 없습니다</h2>
+                        <ToDashboardButton onClick={handleGoToDashboard}>
                             홈으로 돌아가기
-                        </button>
+                        </ToDashboardButton>
                     </div>
                 </div>
             </div>
@@ -63,50 +61,45 @@ export default function AnswerCascaderPage() {
     return (
         <div className="page-background">
             <div className="container">
-                {/* 상단 진행바 */}
-                <div className={styles.progressBarContainer}>
-                    <div className={styles.progressBar} style={{ width: '100%' }} />
-                </div>
-
-                {/* 결과 요약 */}
-                <div className={styles.resultContainer}>
-                    <div className={styles.resultHeader}>
-                        <div className={`${styles.resultIcon} ${correctCount >= totalQuestions * 0.7 ? styles.correct : styles.incorrect}`}>
-                            {correctCount >= totalQuestions * 0.7 ? '🎉' : '📚'}
-                        </div>
-                        <div className={styles.resultTitle}>퀴즈 완료!</div>
-                        <div className={styles.resultSubtitle}>
-                            {totalQuestions}문제 중 {correctCount}문제 정답
-                        </div>
+                <div className={styles.resultCard}>
+                    {/* 아이콘 */}
+                    <div className={styles.resultIcon}>
+                        {correctCount >= totalQuestions * 0.7 ? '🎉' : '📚'}
                     </div>
 
+                    {/* 타이틀 */}
+                    <h2 className={styles.resultTitle}>퀴즈 완료!</h2>
+                    <p className={styles.resultSubtitle}>수고하셨습니다</p>
+
                     {/* 통계 */}
-                    <div className={styles.statsGrid}>
-                        <div className={styles.statCard}>
-                            <div className={styles.statNumber}>{correctCount}</div>
-                            <div className={styles.statLabel}>정답</div>
-                        </div>
-                        <div className={styles.statCard}>
-                            <div className={styles.statNumber}>{accuracy}%</div>
+                    <div className={styles.statsContainer}>
+                        <div className={styles.statItem}>
                             <div className={styles.statLabel}>정답률</div>
+                            <div className={styles.statValue}>{accuracy}%</div>
                         </div>
-                        <div className={styles.statCard}>
-                            <div className={styles.statNumber}>{formatTime(totalTimeUsed)}</div>
-                            <div className={styles.statLabel}>소요시간</div>
+                        <div className={styles.statDivider}></div>
+                        <div className={styles.statItem}>
+                            <div className={styles.statLabel}>정답</div>
+                            <div className={styles.statValue}>
+                                {correctCount}/{totalQuestions}
+                            </div>
+                        </div>
+                        <div className={styles.statDivider}></div>
+                        <div className={styles.statItem}>
+                            <div className={styles.statLabel}>시간</div>
+                            <div className={styles.statValue}>{formatTime(totalTimeUsed)}</div>
                         </div>
                     </div>
 
                     {/* 액션 버튼들 */}
                     <div className={styles.actionButtons}>
-                        <button onClick={handleReview} className={styles.primaryButton}>
-                            리뷰 보러가기
-                        </button>
-                        <button onClick={handleRetry} className={styles.secondaryButton}>
+                        <ToDashboardButton onClick={handleReview} icon="📝">
+                            리뷰 보기
+                        </ToDashboardButton>
+                        <ToDashboardButton onClick={handleRetry} icon="🔄">
                             다시 풀기
-                        </button>
-                        <ToDashboardButton
-                            onClick={handleGoToDashboard}
-                        >
+                        </ToDashboardButton>
+                        <ToDashboardButton onClick={handleGoToDashboard} icon="🏠">
                             대시보드로
                         </ToDashboardButton>
                     </div>

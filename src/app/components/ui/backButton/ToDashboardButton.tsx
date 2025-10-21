@@ -7,23 +7,25 @@ type Props = {
     children: React.ReactNode;
     onClick?: () => void;
     type?: 'button' | 'submit' | 'reset';
-    className?: string; // 필요하면 추가 스타일 덮어쓰기용
+    icon?: string;
 };
 
 export default function SecondaryButton({
     children,
     onClick,
     type = 'button',
-    className = '',
+    icon = '🏠',
 }: Props) {
     return (
         <button
             type={type}
             onClick={onClick}
-            className={`${styles.actionButton} ${styles.tertiary} ${className}`}
+            className={styles.button}
         >
-            <span className={styles.buttonIcon}>🏠</span>
-            {children}
+            <div className={styles.buttonIcon}>{icon}</div>
+            <div className={styles.buttonText}>
+                <span className={styles.buttonTitle}>{children}</span>
+            </div>
         </button>
     );
 }

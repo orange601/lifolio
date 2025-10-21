@@ -1,51 +1,91 @@
 /* ToDashboardButton.module.css */
 
-.actionButton {
-    flex: 1;
-    padding: 16px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-align: center;
+.button {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    color: white;
+    outline: none;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
-/* 흰색 배경에서 보이는 세컨더리 스타일 */
-.tertiary {
-    background: white;
-    color: #667eea;
-    border: 2px solid #e0e0e0;
+.button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
 }
 
-.tertiary:hover {
-    color: #667eea;
-    border-color: #667eea;
-    background: #f8f9ff;
+.button:hover::before {
+    left: 100%;
+}
+
+.button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+.button:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 2px;
 }
 
 .buttonIcon {
-    font-size: 1.2rem;
+    font-size: 2rem;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
 }
 
-/* 반응형 */
-@media (max-width: 480px) {
-    .actionButton {
-        font-size: 15px;
-        padding: 14px;
-    }
+.buttonText {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.buttonTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
 }
 
 @media (max-width: 360px) {
-    .actionButton {
-        font-size: 14px;
-        padding: 13px;
+    .button {
+        padding: 14px 16px;
+    }
+
+    .buttonIcon {
+        width: 45px;
+        height: 45px;
+        margin-right: 12px;
+        font-size: 1.8rem;
+    }
+
+    .buttonTitle {
+        font-size: 1rem;
     }
 }

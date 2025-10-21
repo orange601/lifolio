@@ -64,7 +64,7 @@ export default function BatchPage({ initialQuestions }: Props) {
 
         // 마지막 문제면 종료 → 결과 페이지
         if (currentQuestionIndex >= totalQuestions - 1) {
-            finishTimer();                 // 총 소요시간 저장 (랭킹과 동일)
+            finishTimer(); // 총 소요시간 저장 (랭킹과 동일)
             router.push('/answer');
             return;
         }

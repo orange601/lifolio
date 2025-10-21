@@ -74,7 +74,10 @@ export default function AnswerCascader({ attempt }: Props) {
                     <div className={styles.actionButtons}>
                         <button onClick={handleReview} className={styles.primaryButton}>리뷰 보러가기</button>
                         <button onClick={handleRetry} className={styles.secondaryButton}>다시 풀기</button>
-                        <ToDashboardButton onClick={() => router.push('/')}>대시보드로</ToDashboardButton>
+                        <ToDashboardButton
+                            onClick={() => router.push('/')}>
+                            대시보드로
+                        </ToDashboardButton>
                     </div>
                 </div>
             </div>
