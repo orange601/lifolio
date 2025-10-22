@@ -35,12 +35,14 @@
     font-weight: 700;
     color: #333;
     margin-bottom: 8px;
+    text-align: center;
 }
 
 .resultSubtitle {
     font-size: 1rem;
     color: #666;
     margin-bottom: 30px;
+    text-align: center;
 }
 
 .statsContainer {
