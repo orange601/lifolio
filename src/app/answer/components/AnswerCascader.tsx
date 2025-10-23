@@ -1,15 +1,23 @@
 // /app/answer/components/AnswerCascader.tsx
-'use client'; 
+'use client';
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuizResultStore } from '@/app/store/review/quizResultStore';
 import styles from './AnswerCascader.module.css';
 import ToDashboardButton from '@/app/components/ui/backButton/ToDashboardButton';
+import LoadingComponent from '@/app/components/ui/loading/loading';
 
 export default function AnswerCascaderPage() {
     const router = useRouter();
     const { questions, answers, totalTimeUsed, resetAll } = useQuizResultStore();
+    // 로딩
+    const [isNavigating, setIsNavigating] = React.useState(false);
+
+    // 로딩 중일 때 LoadingComponent 표시
+    if (isNavigating) {
+        return <LoadingComponent />;
+    }
 
     const totalQuestions = questions.length;
 
@@ -30,18 +38,22 @@ export default function AnswerCascaderPage() {
     };
 
     const handleGoToDashboard = () => {
+        setIsNavigating(true);
         resetAll();
         router.push('/');
     };
 
     const handleReview = () => {
+        setIsNavigating(true);
         router.push('/review');
     };
 
-    const handleRetry = () => {
-        resetAll();
-        router.push('/');
-    };
+    // 다시 풀기
+    // const handleRetry = () => {
+    //     setIsNavigating(true);
+    //     resetAll();
+    //     router.push('/');
+    // };
 
     if (totalQuestions === 0) {
         return (
@@ -96,11 +108,14 @@ export default function AnswerCascaderPage() {
                         <ToDashboardButton onClick={handleReview} icon="📝">
                             리뷰 보기
                         </ToDashboardButton>
-                        <ToDashboardButton onClick={handleRetry} icon="🔄">
+                        {/* <ToDashboardButton onClick={handleRetry} icon="🔄">
                             다시 풀기
-                        </ToDashboardButton>
-                        <ToDashboardButton onClick={handleGoToDashboard} icon="🏠">
-                            대시보드로
+                        </ToDashboardButton> */}
+                        <ToDashboardButton
+                            onClick={handleGoToDashboard}
+                            icon="🏠"
+                        >
+                            홈으로
                         </ToDashboardButton>
                     </div>
                 </div>

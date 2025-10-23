@@ -90,39 +90,10 @@
     border-left: 4px solid #2196F3;
 }
 
-/* 버튼 그룹 */
-.buttonGroup {
+.actionButtons {
     display: flex;
+    flex-direction: column;
     gap: 12px;
-    margin-top: 24px;
-}
-
-.btn {
-    flex: 1;
-    padding: 16px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btnPrimary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.btnPrimary:hover {
-    background: linear-gradient(135deg, #5568d3, #6a3f8f);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
 }
 
 /* 애니메이션 */
@@ -158,10 +129,6 @@
         padding: 14px;
     }
 
-    .btn {
-        font-size: 15px;
-        padding: 14px;
-    }
 }
 
 @media (max-width: 360px) {
@@ -209,8 +176,5 @@
         margin-top: 20px;
     }
 
-    .btn {
-        font-size: 14px;
-        padding: 13px;
-    }
+
 }

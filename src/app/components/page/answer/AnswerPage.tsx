@@ -104,19 +104,19 @@ export default function AnswerPage({
                         )}
 
                         {/* 버튼 그룹 */}
-                        <div className={styles.buttonGroup}>
+                        <div className={styles.actionButtons}>
                             <ToDashboardButton
                                 onClick={handleGoToDashboard}
+                                icon="🏠"
                             >
                                 홈으로
                             </ToDashboardButton>
-
-                            <button
-                                className={`${styles.btn} ${styles.btnPrimary}`}
+                            <ToDashboardButton
                                 onClick={handleNextQuestion}
+                                icon="▶️"
                             >
-                                {isLastQuestion ? '퀴즈 완료' : '다음 문제 →'}
-                            </button>
+                                {isLastQuestion ? '퀴즈 완료' : '다음 문제'}
+                            </ToDashboardButton>
                         </div>
                     </div>
                 </div>
