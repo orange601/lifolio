@@ -11,6 +11,7 @@ import type { QuizItem } from "@/core/repositroy/questions/question.type";
 import QuizContainer from '@/app/components/page/quiz/QuizContainer';
 import ProgressQuestionNumberPage from '@/app/components/ui/questionNumber/progressQuestionNumber';
 import ProgressBar from '@/app/components/ui/progressbar/ProgressBar';
+import Loading from '@/app/components/ui/loading/loading'
 
 type Props = {
     initialQuestions: (QuizItem & {
@@ -19,11 +20,19 @@ type Props = {
         correctOrderNo: number; // 1-based
     })[];
 };
-
+const DURATION = 30;  // 제한시간(초)
 export default function BatchPage({ initialQuestions }: Props) {
     const router = useRouter();
-
-    // 랭킹과 동일 API 사용
+    // 현재 question index 번호 
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+    // 로딩
+    const [submitting, setSubmitting] = useState(false);
+    // 타이머
+    const timerRef = useRef<QuizTimerRef>(null);
+    // 각 문항 1회 커밋 보장
+    const answeredSetRef = useRef<Set<number>>(new Set());
+    // store 초기화
     const {
         setQuestions,
         addUserAnswer,
@@ -31,32 +40,32 @@ export default function BatchPage({ initialQuestions }: Props) {
         finishTimer,
         resetAll,
     } = useQuizResultStore();
-
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const timerRef = useRef<QuizTimerRef>(null);
-
-    const DURATION = 30;
-    const totalQuestions = initialQuestions.length;
-
-    // 정규화(랭킹과 동일 필드 보장: correctOrderNo가 없으면 0으로 폴백)
-    const normalized = initialQuestions.map(q => ({
+    // 문제 사용하기 쉽게 변환
+    const normalizedQuestions = initialQuestions.map(q => ({
         ...q,
         correctOrderNo: q.correctOrderNo ?? 0,
     }));
-
+    // 전체 문제 개수
+    const totalQuestions = initialQuestions.length;
     const currentQuestionNum = currentQuestionIndex + 1;
-    const currentQuestion = normalized[currentQuestionIndex];
+    const currentQuestion = normalizedQuestions[currentQuestionIndex];
 
     // 초기화: 문제세팅 + 타이머 시작
     useEffect(() => {
         resetAll();
-        setQuestions(normalized);
+        setQuestions(normalizedQuestions);
         startTimer();
     }, []);
 
+    // 한 문항당 단 한번만 커밋
+    const commitOnce = (qIdx: number) => {
+        if (answeredSetRef.current.has(qIdx)) return false;
+        answeredSetRef.current.add(qIdx);
+        return true;
+    };
+
     const commitAnswer = (selectedIndex: number | null, timeOver = false) => {
-        // 저장만
+        // 문제 푼 정보 store에 저장
         addUserAnswer({
             questionIndex: currentQuestionIndex,
             selectedIndex: timeOver ? null : selectedIndex,
@@ -64,8 +73,10 @@ export default function BatchPage({ initialQuestions }: Props) {
 
         // 마지막 문제면 종료 → 결과 페이지
         if (currentQuestionIndex >= totalQuestions - 1) {
+            // 로딩 시작
+            setSubmitting(true);
             finishTimer(); // 총 소요시간 저장 (랭킹과 동일)
-            router.push('/answer');
+            router.push('/answer'); // 확장성을 위한 이동을 해야한다.
             return;
         }
 
@@ -76,12 +87,21 @@ export default function BatchPage({ initialQuestions }: Props) {
 
     // 보기 선택
     const handleOptionClick = (index: number) => {
+        if (submitting) return;
+        const qIdx = currentQuestionIndex;
+        if (!commitOnce(qIdx)) return;
+
         setSelectedAnswer(index);
         commitAnswer(index, false);
     };
 
     // 시간 초과
     const handleTimeOver = () => {
+        // 이미 제출 중이면 무시
+        if (submitting) return;
+        const qIdx = currentQuestionIndex;
+        if (!commitOnce(qIdx)) return; // ← 추가
+
         setSelectedAnswer(null);
         commitAnswer(null, true);
     };
@@ -127,6 +147,11 @@ export default function BatchPage({ initialQuestions }: Props) {
                     selectedIndex={selectedAnswer}
                     onSelect={handleOptionClick}
                 />
+
+                {/* 문제 완료 후 로딩 */}
+                {submitting && (
+                    <Loading />
+                )}
             </div>
         </div>
     );

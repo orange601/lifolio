@@ -2,7 +2,7 @@
 'use client';
 
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type QuickQuestion = {
     question: string;
@@ -50,6 +50,9 @@ export const useQuickQuizStore = create<State & Actions>()(
             finish: (totalTime) => set({ finishedAt: Date.now(), totalTimeUsed: totalTime }),
             reset: () => set({ questions: [], answers: [], startedAt: undefined, finishedAt: undefined, totalTimeUsed: 0 }),
         }),
-        { name: 'quick-quiz-store' }
+        {
+            name: 'quick-quiz-store',
+            storage: createJSONStorage(() => sessionStorage), // 저장위치
+        }
     )
 );

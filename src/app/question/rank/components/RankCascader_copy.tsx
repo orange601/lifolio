@@ -2,51 +2,47 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import styles from './RankCascader.module.css';
-import ContainerHeaderBackButton from "@/app/components/ui/backButton/HeaderBackButton";
+import { useRouter } from 'next/navigation';
 import type { QuizItem } from "@/core/repositroy/questions/question.type";
+import { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
 import QuizContainer from '@/app/components/page/quiz/QuizContainer';
 import RankContainerHeader from './RankContainerHeader';
-import { useQuizResultStore } from '@/app/store/review/quizResultStore';
 import Loading from '@/app/components/ui/loading/loading'
-import ProgressQuestionNumberPage from '@/app/components/ui/questionNumber/progressQuestionNumber';
-import QuizTimer, { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
-import ProgressBar from '@/app/components/ui/progressbar/ProgressBar';
 
 type Props = {
-    initialQuestions: QuizItem[];
+    questions: QuizItem[];
 };
+
 type AnswerState = { questionIndex: number; selectedIndex: number | null };
 
-const DURATION = 10; // 제한시간(초)
-export default function RankPage({ initialQuestions }: Props) {
+export default function RankPage({ questions }: Props) {
     const router = useRouter();
-    // 현재 question index 번호 
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [answers, setAnswers] = useState<AnswerState[]>([]);
-    const [submitting, setSubmitting] = useState(false);
-    // 전체 결과 저장 중복 방지
-    const submittedRef = useRef(false);
-    // 각 문항 1회 커밋 보장(타임오버/클릭 레이스 방어)
-    const answeredSetRef = useRef<Set<number>>(new Set());
-    // 타이머
-    const timerRef = useRef<QuizTimerRef>(null);
-    // 시작 시간
-    const startedAtRef = useRef<number | null>(null);
-    // 문제 사용하기 쉽게 변환
-    const normalizedQuestions = initialQuestions.map((q) => ({
+
+    // 질문 구조 보정(정답 인덱스 1-based 보장, id 존재 시 유지)
+    const extendedQuestions = questions.map((q) => ({
         ...q,
         question: q.question,
         options: q.options,
         correctOrderNo: q.correctOrderNo ?? 1,
         id: (q as any).id ?? null,
     }));
-    // 전체 문제 개수
-    const totalQuestions = normalizedQuestions.length;
+
+    const DURATION = 10;
+
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+    const [answers, setAnswers] = useState<AnswerState[]>([]);
+    const [submitting, setSubmitting] = useState(false);
+
+    const submittedRef = useRef(false);                   // 전체 결과 저장 중복 방지
+    const answeredSetRef = useRef<Set<number>>(new Set()); // 각 문항 1회 커밋 보장(타임오버/클릭 레이스 방어)
+    const timerRef = useRef<QuizTimerRef>(null);
+    const startedAtRef = useRef<number | null>(null);
+
+    const totalQuestions = extendedQuestions.length;
     const currentQuestionNum = currentQuestionIndex + 1;
-    const currentQuestion = normalizedQuestions[currentQuestionIndex];
+    const currentQuestion = extendedQuestions[currentQuestionIndex];
 
     // 시작 시간 기록
     useEffect(() => {
@@ -91,7 +87,7 @@ export default function RankPage({ initialQuestions }: Props) {
 
     // 서버 규격에 맞춘 items 생성 (answers 배열을 인자로 받도록 변경)
     const buildItemsFrom = (answersArray: AnswerState[]) => {
-        return normalizedQuestions.map((q, i) => {
+        return extendedQuestions.map((q, i) => {
             const ans = answersArray.find(a => a.questionIndex === i);
             const selected = ans?.selectedIndex ?? null;
             const correctIdx = (q.correctOrderNo ?? 1) - 1; // 0-based
@@ -109,21 +105,33 @@ export default function RankPage({ initialQuestions }: Props) {
         if (submittedRef.current || submitting) return;
         submittedRef.current = true;
         setSubmitting(true);
+
         try {
             const endedAt = Date.now();
             const totalTimeMs = Math.max(0, (startedAtRef.current ? endedAt - startedAtRef.current : 0));
             if (totalQuestions <= 0) throw new Error('NO_QUESTIONS');
+
             const payload = {
-                mode: `rank`,
+                mode: 'rank_5s',
                 questionCnt: totalQuestions,
                 totalTimeMs,
                 items: buildItemsFrom(finalAnswers),
             };
-            return await fetch('/api/attempt-answer', {
+
+            const res = await fetch('/api/attempt-answer', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
+
+            if (!res.ok) {
+                try { console.error('attempt 저장 실패:', await res.json()); } catch { /* noop */ }
+                throw new Error(`REQUEST_FAILED_${res.status}`);
+            }
+
+            const data = await res.json();
+            const attemptId = data?.attempt?.id;
+            router.push(attemptId ? `/question/answer?attemptId=${attemptId}` : '/question/answer');
         } catch (e) {
             console.error(e);
             router.push('/question/answer');
@@ -144,14 +152,7 @@ export default function RankPage({ initialQuestions }: Props) {
 
         // 마지막 문항이면 nextAnswers로 바로 저장 (상태 업데이트 기다리지 않음)
         if (currentQuestionIndex >= totalQuestions - 1) {
-            const res = await saveResult(nextAnswers);
-            if (!res || !res.ok) {
-                try { console.error('attempt 저장 실패:') } catch { /* noop */ }
-                throw new Error(`REQUEST_FAILED`);
-            }
-            const data = await res.json();
-            const attemptId = data?.attempt?.id;
-            router.push(attemptId ? `/question/answer?attemptId=${attemptId}` : '/question/answer');
+            await saveResult(nextAnswers);
             return;
         }
 
@@ -161,40 +162,25 @@ export default function RankPage({ initialQuestions }: Props) {
         setCurrentQuestionIndex(i => i + 1);
     };
 
+    const progressPercentage = totalQuestions > 0 ? (currentQuestionNum / totalQuestions) * 100 : 0;
+
     return (
         <div className="page-background">
             <div className="container">
-                {/* Header */}
-                <div className="container-header">
-                    <div className={styles.headerLeft}>
-                        <ContainerHeaderBackButton
-                            onBack={goBack}
-                        />
-
-                        <ProgressQuestionNumberPage
-                            currentQuestion={currentQuestionNum}
-                            totalQuestions={totalQuestions}
-                        />
-                    </div>
-
-                    <div className={styles.headerRight}>
-                        <QuizTimer
-                            key={currentQuestionIndex}
-                            ref={timerRef}
-                            duration={DURATION}
-                            paused={false}
-                            onTimeOver={handleTimeOver}
-                        />
-                    </div>
-                </div>
-
-                {/* Progress Bar */}
-                <ProgressBar
-                    current={currentQuestionNum}
-                    total={totalQuestions}
+                <RankContainerHeader
+                    ref={timerRef}
+                    currentQuestionNum={currentQuestionNum}
+                    onBack={goBack}
+                    duration={DURATION}
+                    paused={false}
+                    onTimeOver={handleTimeOver}
+                    timerKey={currentQuestionIndex} // 문항 바뀔 때 타이머 리셋
                 />
 
-                {/* Quiz */}
+                <div className={styles.progressBarContainer}>
+                    <div className={styles.progressBar} style={{ width: `${progressPercentage}%` }} />
+                </div>
+
                 <QuizContainer
                     questionNumber={currentQuestionNum}
                     questionText={currentQuestion.question}
@@ -211,4 +197,3 @@ export default function RankPage({ initialQuestions }: Props) {
         </div>
     );
 }
-
