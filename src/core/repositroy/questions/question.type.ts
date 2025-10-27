@@ -21,7 +21,7 @@ export interface QuestionWithChoices {
     choices: Choice[];
 }
 
-/** ✅ UI에서 바로 쓰는 형태 (정답 인덱스 포함 + 해설 포함) */
+/** 정답 인덱스 포함 + 해설 포함  */
 export interface QuizItem {
     id: string;
     question: string;
@@ -30,4 +30,30 @@ export interface QuizItem {
     explanation: string | null;
 }
 
+/**
+ * 문제와 해당문제를 선택한 정답들
+ */
+export interface SelectedAnswers {
+    order_no: number;
+    question_id?: number | null;
+    selected_idx: number | null;
+    correct_idx: number;
+}
 
+export type UserAnswer = {
+    questionIndex: number;
+    selectedIndex: number | null; // 시간초과면 null
+};
+
+export type CreateAttemptAnswerBody = {
+    mode: string;
+    questionCnt: number;
+    score?: number;  // 무시
+    totalTimeMs: number;
+    items: Array<{
+        order_no: number;
+        question_id?: number | null;
+        selected_idx: number | null;
+        correct_idx: number;
+    }>;
+};

@@ -7,12 +7,12 @@ import styles from './RankCascader.module.css';
 import ContainerHeaderBackButton from "@/app/components/ui/backButton/HeaderBackButton";
 import type { QuizItem } from "@/core/repositroy/questions/question.type";
 import QuizContainer from '@/app/components/page/quiz/QuizContainer';
-import RankContainerHeader from './RankContainerHeader';
 import { useQuizResultStore } from '@/app/store/review/quizResultStore';
 import Loading from '@/app/components/ui/loading/loading'
 import ProgressQuestionNumberPage from '@/app/components/ui/questionNumber/progressQuestionNumber';
 import QuizTimer, { QuizTimerRef } from '@/app/components/ui/quizTimer/timer';
 import ProgressBar from '@/app/components/ui/progressbar/ProgressBar';
+import { saveAttepmtAnswer } from '@/app/question/rank/components/RankAttemptAnswerSave';
 
 type Props = {
     initialQuestions: QuizItem[];
@@ -22,10 +22,12 @@ type AnswerState = { questionIndex: number; selectedIndex: number | null };
 const DURATION = 10; // 제한시간(초)
 export default function RankPage({ initialQuestions }: Props) {
     const router = useRouter();
+    const [answers, setAnswers] = useState<AnswerState[]>([]);
     // 현재 question index 번호 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    // 정답 보기 중 선택한 번호
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [answers, setAnswers] = useState<AnswerState[]>([]);
+    // 마지막 문제 풀고 전달시
     const [submitting, setSubmitting] = useState(false);
     // 전체 결과 저장 중복 방지
     const submittedRef = useRef(false);
@@ -47,21 +49,24 @@ export default function RankPage({ initialQuestions }: Props) {
     const totalQuestions = normalizedQuestions.length;
     const currentQuestionNum = currentQuestionIndex + 1;
     const currentQuestion = normalizedQuestions[currentQuestionIndex];
+    // store 초기화
+    const {
+        setQuestions,
+        addUserAnswer,
+        startTimer,
+        finishTimer,
+        resetAll,
+    } = useQuizResultStore();
 
     // 시작 시간 기록
     useEffect(() => {
-        startedAtRef.current = Date.now();
-        return () => { startedAtRef.current = null; };
+        resetAll();
+        setQuestions(normalizedQuestions);
+        startTimer();
     }, []);
 
     // 문제 이동 시 선택 초기화
     useEffect(() => { setSelectedAnswer(null); }, [currentQuestionIndex]);
-
-    const goBack = () => {
-        const shouldLeave = window.confirm('랭킹 문제에서는 뒤로가기를 하실 수 없습니다.\n퀴즈를 그만두시겠습니까?');
-        if (!shouldLeave) return;
-        router.push('/');
-    };
 
     // 한 문항당 단 한번만 커밋
     const commitOnce = (qIdx: number) => {
@@ -70,95 +75,78 @@ export default function RankPage({ initialQuestions }: Props) {
         return true;
     };
 
+    // 타이머
     const handleTimeOver = () => {
+        if (submitting) return;
         const qIdx = currentQuestionIndex;
         if (!commitOnce(qIdx)) return;
 
-        // setTimeout으로 다음 이벤트 루프에서 실행
+        // 안전하게 실행시키기 위해 ( race condition )
         setTimeout(() => {
             setSelectedAnswer(null);
             commitAnswer(null, true);
         }, 0);
     };
 
+    // 보기 선택 이벤트
     const handleOptionClick = (index: number) => {
         if (submitting) return;
         const qIdx = currentQuestionIndex;
         if (!commitOnce(qIdx)) return;
+
         setSelectedAnswer(index);
         commitAnswer(index, false);
     };
 
-    // 서버 규격에 맞춘 items 생성 (answers 배열을 인자로 받도록 변경)
-    const buildItemsFrom = (answersArray: AnswerState[]) => {
-        return normalizedQuestions.map((q, i) => {
-            const ans = answersArray.find(a => a.questionIndex === i);
-            const selected = ans?.selectedIndex ?? null;
-            const correctIdx = (q.correctOrderNo ?? 1) - 1; // 0-based
-            return {
-                order_no: i + 1,
-                question_id: q.id ?? null,
-                correct_idx: correctIdx,
-                selected_idx: selected, // null이면 미응답
-            };
+    const commitAnswer = async (
+        selectedIndex: number | null,
+        timeOver = false
+    ) => {
+        // 문제 푼 정보 store에 저장
+        addUserAnswer({
+            questionIndex: currentQuestionIndex,
+            selectedIndex: timeOver ? null : selectedIndex,
         });
-    };
 
-    // 최종 저장 (answers를 인자로 받아 최신 상태를 보장)
-    const saveResult = async (finalAnswers: AnswerState[]) => {
-        if (submittedRef.current || submitting) return;
-        submittedRef.current = true;
-        setSubmitting(true);
-        try {
-            const endedAt = Date.now();
-            const totalTimeMs = Math.max(0, (startedAtRef.current ? endedAt - startedAtRef.current : 0));
-            if (totalQuestions <= 0) throw new Error('NO_QUESTIONS');
-            const payload = {
-                mode: `rank`,
-                questionCnt: totalQuestions,
-                totalTimeMs,
-                items: buildItemsFrom(finalAnswers),
-            };
-            return await fetch('/api/attempt-answer', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
-        } catch (e) {
-            console.error(e);
-            router.push('/question/answer');
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    // 보기 선택/시간초과 → 답 저장 → 마지막이면 즉시 saveResult(nextAnswers)
-    const commitAnswer = async (selectedIndex: number | null, timeOver = false) => {
-        // 최신 상태를 즉시 반영한 nextAnswers 계산 (setState 비동기 문제 해결)
-        const nextAnswers: AnswerState[] = (() => {
-            const filtered = answers.filter(a => a.questionIndex !== currentQuestionIndex);
-            filtered.push({ questionIndex: currentQuestionIndex, selectedIndex: timeOver ? null : selectedIndex });
-            filtered.sort((a, b) => a.questionIndex - b.questionIndex);
-            return filtered;
-        })();
-
-        // 마지막 문항이면 nextAnswers로 바로 저장 (상태 업데이트 기다리지 않음)
+        // 마지막 문제면 종료 → 결과 페이지
         if (currentQuestionIndex >= totalQuestions - 1) {
-            const res = await saveResult(nextAnswers);
-            if (!res || !res.ok) {
-                try { console.error('attempt 저장 실패:') } catch { /* noop */ }
-                throw new Error(`REQUEST_FAILED`);
+            // 제출 시작
+            setSubmitting(true);
+            finishTimer(); // 총 소요시간 저장 (랭킹과 동일)
+
+            try {
+                // store에서 최신 상태 가져오기
+                const storeState = useQuizResultStore.getState();
+                const { questions, answers, totalTimeUsed } = storeState;
+                const attemptResult = await saveAttepmtAnswer(
+                    totalQuestions,
+                    totalTimeUsed,
+                    questions,
+                    answers
+                );
+                if (!attemptResult.ok) {
+                    const errorData = await attemptResult.json();
+                    console.error('답안 저장 실패:', errorData);
+                }
+            } catch (error) {
+                throw new Error(`Save attempt answer Failed`);
+
+            } finally {
+                setSubmitting(false);
+                router.push('/answer'); // 확장성을 위한 이동을 해야한다.
             }
-            const data = await res.json();
-            const attemptId = data?.attempt?.id;
-            router.push(attemptId ? `/question/answer?attemptId=${attemptId}` : '/question/answer');
             return;
         }
 
-        // 다음 문항으로 이동
-        setAnswers(nextAnswers);
+        // 다음 문제로 진행
         setSelectedAnswer(null);
         setCurrentQuestionIndex(i => i + 1);
+    };
+
+    const goBack = () => {
+        const shouldLeave = window.confirm('랭킹 문제에서는 뒤로가기를 하실 수 없습니다.\n퀴즈를 그만두시겠습니까?');
+        if (!shouldLeave) return;
+        router.push('/');
     };
 
     return (
@@ -170,12 +158,12 @@ export default function RankPage({ initialQuestions }: Props) {
                         <ContainerHeaderBackButton
                             onBack={goBack}
                         />
-
-                        <ProgressQuestionNumberPage
-                            currentQuestion={currentQuestionNum}
-                            totalQuestions={totalQuestions}
-                        />
                     </div>
+
+                    <ProgressQuestionNumberPage
+                        currentQuestion={currentQuestionNum}
+                        totalQuestions={totalQuestions}
+                    />
 
                     <div className={styles.headerRight}>
                         <QuizTimer

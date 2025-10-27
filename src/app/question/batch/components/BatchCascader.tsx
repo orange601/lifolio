@@ -64,7 +64,34 @@ export default function BatchPage({ initialQuestions }: Props) {
         return true;
     };
 
-    const commitAnswer = (selectedIndex: number | null, timeOver = false) => {
+    // 타이머
+    const handleTimeOver = () => {
+        // 이미 제출 중이면 무시
+        if (submitting) return;
+        const qIdx = currentQuestionIndex;
+        if (!commitOnce(qIdx)) return; // ← 추가
+
+        // 안전하게 실행시키기 위해 ( race condition )
+        setTimeout(() => {
+            setSelectedAnswer(null);
+            commitAnswer(null, true);
+        }, 0);
+    };
+
+    // 보기 선택 이벤트
+    const handleOptionClick = (index: number) => {
+        if (submitting) return;
+        const qIdx = currentQuestionIndex;
+        if (!commitOnce(qIdx)) return;
+
+        setSelectedAnswer(index);
+        commitAnswer(index, false);
+    };
+
+    const commitAnswer = (
+        selectedIndex: number | null,
+        timeOver = false
+    ) => {
         // 문제 푼 정보 store에 저장
         addUserAnswer({
             questionIndex: currentQuestionIndex,
@@ -85,27 +112,6 @@ export default function BatchPage({ initialQuestions }: Props) {
         setCurrentQuestionIndex(i => i + 1);
     };
 
-    // 보기 선택
-    const handleOptionClick = (index: number) => {
-        if (submitting) return;
-        const qIdx = currentQuestionIndex;
-        if (!commitOnce(qIdx)) return;
-
-        setSelectedAnswer(index);
-        commitAnswer(index, false);
-    };
-
-    // 시간 초과
-    const handleTimeOver = () => {
-        // 이미 제출 중이면 무시
-        if (submitting) return;
-        const qIdx = currentQuestionIndex;
-        if (!commitOnce(qIdx)) return; // ← 추가
-
-        setSelectedAnswer(null);
-        commitAnswer(null, true);
-    };
-
     const goBack = () => router.push('/');
 
     return (
@@ -114,7 +120,9 @@ export default function BatchPage({ initialQuestions }: Props) {
                 {/* Header */}
                 <div className="container-header">
                     <div className={styles.headerLeft}>
-                        <ContainerHeaderBackButton onBack={goBack} />
+                        <ContainerHeaderBackButton
+                            onBack={goBack}
+                        />
                     </div>
 
                     <ProgressQuestionNumberPage

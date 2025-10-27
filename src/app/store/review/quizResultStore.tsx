@@ -1,11 +1,6 @@
 // /app/store/review/quizResultStore.ts
 import { create } from 'zustand';
-import type { QuizItem } from "@/core/repositroy/questions/question.type";
-
-type UserAnswer = {
-    questionIndex: number;
-    selectedIndex: number | null; // 시간초과면 null
-};
+import type { QuizItem, UserAnswer } from "@/core/repositroy/questions/question.type";
 
 type State = {
     questions: QuizItem[];
