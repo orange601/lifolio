@@ -17,7 +17,7 @@ import {
     saveGeneratedQuestions,
     type QuestionInput,
     type SaveOptions,
-} from "@/core/repositroy/questions/question.create.repo"; // ← 사용자가 제공한 저장 유틸
+} from "@/core/repositroy/questions/questions.create.repo"; // ← 사용자가 제공한 저장 유틸
 
 // ──────────────────────────────────────────────
 // 작은 유틸

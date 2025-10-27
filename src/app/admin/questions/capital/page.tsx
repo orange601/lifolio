@@ -5,7 +5,7 @@
  * ----------------------- 여기 주석 풀어 위치에 주석풀면됨
  */
 
-import { saveGeneratedQuestions } from "@/core/repositroy/questions/question.create.repo";
+import { saveGeneratedQuestions } from "@/core/repositroy/questions/questions.create.repo";
 
 // Node 18+ 전역 fetch 사용 (구버전이면 node-fetch 사용)
 

@@ -18,7 +18,7 @@
  */
 
 import * as cheerio from "cheerio";
-import { saveGeneratedQuestions } from "@/core/repositroy/questions/question.create.repo";
+import { saveGeneratedQuestions } from "@/core/repositroy/questions/questions.create.repo";
 
 // ===== 타입 =====
 type ChoiceOut = { content: string; is_correct: boolean; order_no: 1 | 2 | 3 | 4 };

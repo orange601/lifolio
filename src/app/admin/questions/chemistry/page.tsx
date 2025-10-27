@@ -14,7 +14,7 @@
 import * as cheerio from "cheerio";
 import type { AnyNode } from "domhandler";
 // 프로젝트 경로 기준 import (필요에 맞게 경로 조정)
-import { saveGeneratedQuestions } from "@/core/repositroy/questions/question.create.repo";
+import { saveGeneratedQuestions } from "@/core/repositroy/questions/questions.create.repo";
 
 // =============== 설정 ===============
 const WIKI_URL = "https://ko.wikipedia.org/wiki/%EC%9B%90%EC%86%8C_%EB%AA%A9%EB%A1%9D";
