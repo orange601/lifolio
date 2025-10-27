@@ -4,9 +4,9 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuizResultStore } from '@/app/store/review/quizResultStore';
 import styles from '../components/ReviewCascader.module.css';
+import ToDashboardButton from '@/app/components/ui/backButton/ToDashboardButton';
 
 type FilterMode = 'all' | 'incorrect' | 'unanswered';
-
 type Question = {
     question: string;
     options: string[];
@@ -169,11 +169,6 @@ export default function ReviewPage() {
         scrollToIdx(nextIdx);
     };
 
-    const handleRestart = () => {
-        resetAll();
-        router.push('/question/quick');
-    };
-
     const handleGoHome = () => {
         resetAll();
         router.push('/');
@@ -290,12 +285,12 @@ export default function ReviewPage() {
 
                 {/* Footer Actions */}
                 <div className={styles.actionButtons}>
-                    <button onClick={handleRestart} className={styles.primaryButton}>
-                        다시 풀기
-                    </button>
-                    <button onClick={handleGoHome} className={styles.secondaryButton}>
-                        홈으로 돌아가기
-                    </button>
+                    <ToDashboardButton
+                        onClick={handleGoHome}
+                        icon="🏠"
+                    >
+                        홈으로
+                    </ToDashboardButton>
                 </div>
             </div>
         </div>
