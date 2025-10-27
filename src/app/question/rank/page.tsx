@@ -1,6 +1,6 @@
 // question/rank
 
-import BatchPage from "@/app/question/batch/components/BatchCascader";
+import RankPageCascader from '@/app/question/rank/components/RankCascader'
 import { findQuickStartMcqItems } from "@/core/repositroy/questions/quick.question.repo"
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -15,7 +15,7 @@ export default async function RankPage() {
     const questions = await findQuickStartMcqItems(limit);
     return (
         <main>
-            <BatchPage initialQuestions={questions} />
+            <RankPageCascader initialQuestions={questions} />
         </main>
     );
 }

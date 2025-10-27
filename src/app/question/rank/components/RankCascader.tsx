@@ -124,6 +124,7 @@ export default function RankPage({ initialQuestions }: Props) {
                     questions,
                     answers
                 );
+                console.log("attemptResult :", attemptResult)
                 if (!attemptResult.ok) {
                     const errorData = await attemptResult.json();
                     console.error('답안 저장 실패:', errorData);
