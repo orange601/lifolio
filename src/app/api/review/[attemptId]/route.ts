@@ -1,14 +1,19 @@
-import { NextResponse } from "next/server";
+// src/app/api/review/[attemptId]/route.ts
+import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { findAttemptReview } from "@/core/repositroy/attempt_answer/attempt.review.repo";
 
-type Params = { params: { attemptId: string } };
+type RouteParams = { attemptId: string };
 
-export async function GET(_req: Request, { params }: Params) {
+export async function GET(
+    _req: NextRequest,
+    context: { params: Promise<RouteParams> } // ✅ Next 15: params는 Promise
+) {
     const user = await currentUser();
     if (!user) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
-    const id = Number(params.attemptId);
+    const { attemptId } = await context.params;  // ✅ await 필요
+    const id = Number(attemptId);
     if (!Number.isFinite(id) || id <= 0) {
         return NextResponse.json({ error: "INVALID_ATTEMPT_ID" }, { status: 400 });
     }

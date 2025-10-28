@@ -1,6 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { createOne, findAppUserByClerkId } from '@/core/repositroy/user/user.create.repo';
-import RankAuthGate from "@/app/components/page/auth/AuthGate"
 
 export default async function UserPage() {
     // 1. 현재 로그인된 사용자 정보 가져오기

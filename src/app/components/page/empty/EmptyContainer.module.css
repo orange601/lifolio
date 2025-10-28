@@ -1,0 +1,24 @@
+/* No Data State */
+.noDataMessage {
+    text-align: center;
+    padding: 40px 20px;
+    color: white;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.noDataIcon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.noDataMessage h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.noDataMessage p {
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    opacity: 0.9;
+}

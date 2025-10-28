@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useQuizResultStore } from '@/app/store/review/quizResultStore';
 import styles from '../components/ReviewCascader.module.css';
 import ToDashboardButton from '@/app/components/ui/backButton/ToDashboardButton';
+import Loading from '@/app/components/ui/loading/loading'
+import EmptyContainer from '@/app/components/page/empty/EmptyContainer';
 
 type FilterMode = 'all' | 'incorrect' | 'unanswered';
 type Question = {
@@ -38,27 +40,11 @@ function getOptionLetter(i: number) {
 export default function ReviewPage() {
     const router = useRouter();
     const { questions, answers, resetAll } = useQuizResultStore();
+    // 이동하는 중일때
+    const [isLeaving, setIsLeaving] = useState(false);
 
     // Guard clause
-    if (!questions || questions.length === 0) {
-        return (
-            <div className="page-background">
-                <div className="container">
-                    <div className={styles.noDataMessage}>
-                        <div className={styles.noDataIcon}>📝</div>
-                        <h2>퀴즈 결과를 찾을 수 없습니다</h2>
-                        <p>홈으로 돌아가서 새로운 퀴즈를 시작해보세요.</p>
-                        <button
-                            onClick={() => { resetAll(); router.push('/'); }}
-                            className={styles.primaryButton}
-                        >
-                            홈으로 돌아가기
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    const isEmpty = !questions || questions.length === 0;
 
     // Derived data calculation
     const answersByIdx = useMemo(() => {
@@ -170,6 +156,7 @@ export default function ReviewPage() {
     };
 
     const handleGoHome = () => {
+        setIsLeaving(true);
         resetAll();
         router.push('/');
     };
@@ -177,121 +164,136 @@ export default function ReviewPage() {
     return (
         <div className="page-background">
             <div className="container">
-                {/* Header Section */}
-                <div className={styles.header}>
-                    <div className={styles.resultIcon}>
-                        {totals.rate >= 70 ? '🎉' : '📚'}
-                    </div>
-                    <h1 className={styles.pageTitle}>퀴즈 결과 리뷰</h1>
+                {/* [변경] 렌더 분기 - 짧은 회로 평가 */}
 
-                    {/* Score Summary */}
-                    <div className={styles.scoreCard}>
-                        <div className={styles.mainScore}>
-                            <span className={styles.scoreNumber}>{totals.rate}%</span>
-                            <span className={styles.scoreLabel}>정답률</span>
-                        </div>
-                        <div className={styles.scoreDetails}>
-                            <div className={styles.scoreItem}>
-                                <span className={styles.scoreIcon}>✅</span>
-                                <span>정답 {totals.correct}개</span>
+                {isLeaving && (
+                    // 이동 중
+                    <Loading />
+                )}
+
+                {!isLeaving && isEmpty && (
+                    <EmptyContainer
+                        onGoHome={handleGoHome}
+                    />
+                )}
+
+                {!isLeaving && !isEmpty && (
+                    // 평상시 정상 렌더링
+                    <>
+                        {/* Header Section */}
+                        <div className={styles.header}>
+                            <div className={styles.resultIcon}>
+                                {totals.rate >= 70 ? '🎉' : '📚'}
                             </div>
-                            <div className={styles.scoreItem}>
-                                <span className={styles.scoreIcon}>❌</span>
-                                <span>오답 {totals.incorrect}개</span>
+                            <h1 className={styles.pageTitle}>퀴즈 결과 리뷰</h1>
+
+                            {/* Score Summary */}
+                            <div className={styles.scoreCard}>
+                                <div className={styles.mainScore}>
+                                    <span className={styles.scoreNumber}>{totals.rate}%</span>
+                                    <span className={styles.scoreLabel}>정답률</span>
+                                </div>
+                                <div className={styles.scoreDetails}>
+                                    <div className={styles.scoreItem}>
+                                        <span className={styles.scoreIcon}>✅</span>
+                                        <span>정답 {totals.correct}개</span>
+                                    </div>
+                                    <div className={styles.scoreItem}>
+                                        <span className={styles.scoreIcon}>❌</span>
+                                        <span>오답 {totals.incorrect}개</span>
+                                    </div>
+                                    <div className={styles.scoreItem}>
+                                        <span className={styles.scoreIcon}>⏸️</span>
+                                        <span>미응답 {totals.unanswered}개</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className={styles.scoreItem}>
-                                <span className={styles.scoreIcon}>⏸️</span>
-                                <span>미응답 {totals.unanswered}개</span>
+                        </div>
+
+                        {/* Control Panel */}
+                        <div className={styles.controlPanel}>
+                            <div className={styles.filterSection}>
+                                <label className={styles.filterLabel}>
+                                    <span className={styles.filterLabelText}>필터</span>
+                                    <select
+                                        value={filterMode}
+                                        onChange={e => setFilterMode(e.target.value as FilterMode)}
+                                        className={styles.filterSelect}
+                                    >
+                                        <option value="all">전체 문제 ({derivedAll.length})</option>
+                                        <option value="incorrect">오답만 ({totals.incorrect})</option>
+                                        <option value="unanswered">미응답만 ({totals.unanswered})</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                            <div className={styles.actionSection}>
+                                <div className={styles.expandControls}>
+                                    <button className={styles.controlButton} onClick={collapseAll}>
+                                        모두 접기
+                                    </button>
+                                    <button className={styles.controlButton} onClick={expandAll}>
+                                        모두 펼치기
+                                    </button>
+                                </div>
+
+                                <div className={styles.navigationControls}>
+                                    <button
+                                        className={styles.navButton}
+                                        onClick={goPrevIncorrect}
+                                        disabled={incorrectIdxs.length === 0}
+                                    >
+                                        ← 이전 오답
+                                    </button>
+                                    <span className={styles.navInfo}>
+                                        {incorrectIdxs.length > 0 ? `${incorrectIdxs.length}개 오답` : '오답 없음'}
+                                    </span>
+                                    <button
+                                        className={styles.navButton}
+                                        onClick={goNextIncorrect}
+                                        disabled={incorrectIdxs.length === 0}
+                                    >
+                                        다음 오답 →
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                {/* Control Panel */}
-                <div className={styles.controlPanel}>
-                    <div className={styles.filterSection}>
-                        <label className={styles.filterLabel}>
-                            <span className={styles.filterLabelText}>필터</span>
-                            <select
-                                value={filterMode}
-                                onChange={e => setFilterMode(e.target.value as FilterMode)}
-                                className={styles.filterSelect}
-                            >
-                                <option value="all">전체 문제 ({derivedAll.length})</option>
-                                <option value="incorrect">오답만 ({totals.incorrect})</option>
-                                <option value="unanswered">미응답만 ({totals.unanswered})</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div className={styles.actionSection}>
-                        <div className={styles.expandControls}>
-                            <button className={styles.controlButton} onClick={collapseAll}>
-                                모두 접기
-                            </button>
-                            <button className={styles.controlButton} onClick={expandAll}>
-                                모두 펼치기
-                            </button>
+                        {/* Questions List */}
+                        <div className={styles.questionsContainer}>
+                            {filtered.length === 0 ? (
+                                <div className={styles.emptyState}>
+                                    <div className={styles.emptyIcon}>🔍</div>
+                                    <p>선택한 조건에 해당하는 문제가 없습니다.</p>
+                                </div>
+                            ) : (
+                                <div className={styles.questionsList}>
+                                    {filtered.map((data) => (
+                                        <QuestionCard
+                                            key={data.idx}
+                                            data={data}
+                                            isOpen={expanded.has(data.idx)}
+                                            onToggle={() => toggleExpand(data.idx)}
+                                            isFocused={currentFocusIdx === data.idx}
+                                            registerRef={(el) => {
+                                                const map = cardRefs.current;
+                                                if (el) map.set(data.idx, el);
+                                                else map.delete(data.idx);
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        <div className={styles.navigationControls}>
-                            <button
-                                className={styles.navButton}
-                                onClick={goPrevIncorrect}
-                                disabled={incorrectIdxs.length === 0}
-                            >
-                                ← 이전 오답
-                            </button>
-                            <span className={styles.navInfo}>
-                                {incorrectIdxs.length > 0 ? `${incorrectIdxs.length}개 오답` : '오답 없음'}
-                            </span>
-                            <button
-                                className={styles.navButton}
-                                onClick={goNextIncorrect}
-                                disabled={incorrectIdxs.length === 0}
-                            >
-                                다음 오답 →
-                            </button>
+                        {/* Footer Actions */}
+                        <div className={styles.actionButtons}>
+                            <ToDashboardButton onClick={handleGoHome} icon="🏠">
+                                홈으로
+                            </ToDashboardButton>
                         </div>
-                    </div>
-                </div>
-
-                {/* Questions List */}
-                <div className={styles.questionsContainer}>
-                    {filtered.length === 0 ? (
-                        <div className={styles.emptyState}>
-                            <div className={styles.emptyIcon}>🔍</div>
-                            <p>선택한 조건에 해당하는 문제가 없습니다.</p>
-                        </div>
-                    ) : (
-                        <div className={styles.questionsList}>
-                            {filtered.map((data) => (
-                                <QuestionCard
-                                    key={data.idx}
-                                    data={data}
-                                    isOpen={expanded.has(data.idx)}
-                                    onToggle={() => toggleExpand(data.idx)}
-                                    isFocused={currentFocusIdx === data.idx}
-                                    registerRef={(el) => {
-                                        const map = cardRefs.current;
-                                        if (el) map.set(data.idx, el);
-                                        else map.delete(data.idx);
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-                {/* Footer Actions */}
-                <div className={styles.actionButtons}>
-                    <ToDashboardButton
-                        onClick={handleGoHome}
-                        icon="🏠"
-                    >
-                        홈으로
-                    </ToDashboardButton>
-                </div>
+                    </>
+                )}
             </div>
         </div>
     );
