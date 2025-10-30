@@ -82,10 +82,10 @@ export default function CreateQuestionPage() {
     }
 
     return (
-        <div className="page-background">
-            <div className="container">
+        <div className="p-4 max-w-6xl mx-auto">
+            <div className="max-w-xl">
                 <div className="container-header">
-                    <div className="text-white text-lg font-semibold">✍️ 문제 만들기</div>
+                    <div className="text-lg font-semibold">✍️ 만들기</div>
                 </div>
 
                 <div className="bg-white/90 backdrop-blur rounded-2xl p-5 shadow-lg border border-white/30">
