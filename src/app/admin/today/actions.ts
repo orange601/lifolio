@@ -2,25 +2,6 @@
 
 import { pool } from '@/lib/db/pool';
 
-
-export type CategoryItem = { id: number; name: string; published: boolean | null }
-
-export async function listCategories(): Promise<CategoryItem[]> {
-    const client = await pool.connect()
-    try {
-        const { rows } = await client.query(
-            `
-            SELECT id, name, COALESCE(published, true) AS published
-            FROM quiz.category
-            ORDER BY parent_id NULLS FIRST, id ASC
-            `
-        )
-        return rows
-    } finally {
-        client.release()
-    }
-}
-
 // --- Quiz Set ---
 export type QuizSetItem = { id: number; title: string; status: 'draft' | 'published' | 'archived'; is_random: boolean }
 

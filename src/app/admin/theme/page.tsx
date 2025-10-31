@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useMemo, useState, useTransition } from 'react';
-import { searchQuestions, saveQuizSet } from './actions';
+import { saveQuizSet } from './actions';
+import { searchQuestions, CategoryItem, listCategories } from '@/app/admin/actions';
 
 type Question = {
     id: number;
@@ -22,6 +23,12 @@ export default function QuickSetPage() {
     const [page, setPage] = useState(1);
     const pageSize = 20;
 
+    // 필터 상태 추가
+    const [filterType, setFilterType] = useState<string>('');
+    const [filterCategory, setFilterCategory] = useState<number | ''>('');
+    const [filterStatus, setFilterStatus] = useState<string>('');
+    const [categories, setCategories] = useState<CategoryItem[]>([]);
+
     // 문항 목록
     const [items, setItems] = useState<Question[]>([]);
     const [total, setTotal] = useState(0);
@@ -37,14 +44,29 @@ export default function QuickSetPage() {
 
     const totalPages = useMemo(() => Math.max(1, Math.ceil(total / pageSize)), [total]);
 
-    // 문항 로드 (서버 액션 직접 호출)
+    // 카테고리 목록 로드
     useEffect(() => {
         startTransition(async () => {
-            const res = await searchQuestions({ query, page, pageSize });
+            const rows = await listCategories();
+            setCategories(rows.filter(r => r.published !== false));
+        });
+    }, []);
+
+    // 문항 로드 (서버 액션 직접 호출) - 필터 포함
+    useEffect(() => {
+        startTransition(async () => {
+            const res = await searchQuestions({
+                query,
+                page,
+                pageSize,
+                type: filterType || undefined,
+                category_id: filterCategory || undefined,
+                status: filterStatus || undefined,
+            });
             setItems(res.items);
             setTotal(res.total);
         });
-    }, [query, page]);
+    }, [query, page, filterType, filterCategory, filterStatus]);
 
     const addItem = (q: Question) => {
         if (selected.some(s => s.question_id === q.id)) return;
@@ -204,33 +226,81 @@ export default function QuickSetPage() {
                     </button>
                 </div>
 
+                {/* 필터 영역 추가 */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-3">
+                    <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">문제 유형</label>
+                        <select
+                            className="w-full border rounded p-2 text-sm"
+                            value={filterType}
+                            onChange={(e) => { setFilterType(e.target.value); setPage(1); }}
+                        >
+                            <option value="">전체</option>
+                            <option value="MCQ">객관식 (MCQ)</option>
+                            <option value="SUBJECTIVE">주관식</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">카테고리</label>
+                        <select
+                            className="w-full border rounded p-2 text-sm"
+                            value={filterCategory}
+                            onChange={(e) => {
+                                setFilterCategory(e.target.value ? Number(e.target.value) : '');
+                                setPage(1);
+                            }}
+                        >
+                            <option value="">전체</option>
+                            {categories.map(c => (
+                                <option key={c.id} value={c.id}>{c.id}. {c.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">상태</label>
+                        <select
+                            className="w-full border rounded p-2 text-sm"
+                            value={filterStatus}
+                            onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }}
+                        >
+                            <option value="">전체</option>
+                            <option value="published">published (공개)</option>
+                            <option value="draft">draft (비공개)</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div className="overflow-auto">
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b bg-gray-50">
                                 <th className="text-left p-2">ID</th>
                                 <th className="text-left p-2">지문(stem)</th>
+                                <th className="text-left p-2">유형</th>
                                 <th className="text-left p-2">카테고리</th>
                                 <th className="text-left p-2">난이도</th>
                                 <th className="text-left p-2">학년</th>
-                                <th className="text-left p-2">언어</th>
+                                <th className="text-left p-2">상태</th>
                                 <th className="text-left p-2">선택</th>
                             </tr>
                         </thead>
                         <tbody>
                             {isPending ? (
-                                <tr><td colSpan={7} className="p-4 text-center">불러오는 중…</td></tr>
+                                <tr><td colSpan={8} className="p-4 text-center">불러오는 중…</td></tr>
                             ) : items.length === 0 ? (
-                                <tr><td colSpan={7} className="p-4 text-center">결과 없음</td></tr>
+                                <tr><td colSpan={8} className="p-4 text-center">결과 없음</td></tr>
                             ) : (
                                 items.map(q => (
                                     <tr key={q.id} className="border-b">
                                         <td className="p-2">{q.id}</td>
                                         <td className="p-2">{q.stem ?? '-'}</td>
+                                        <td className="p-2">{q.type ?? '-'}</td>
                                         <td className="p-2">{q.category_id ?? '-'}</td>
                                         <td className="p-2">{q.difficulty ?? '-'}</td>
                                         <td className="p-2">{q.grade ?? '-'}</td>
-                                        <td className="p-2">{q.language ?? '-'}</td>
+                                        <td className="p-2">{q.status ?? '-'}</td>
                                         <td className="p-2">
                                             <button
                                                 className="px-2 py-1 border rounded disabled:opacity-50"

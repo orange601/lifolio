@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useEffect, useMemo, useState, useTransition } from 'react'
-import { listCategories, listQuizSets, addQuestionToQuizSet, saveQuestion, type CategoryItem, type QuizSetItem } from './actions'
+import { listQuizSets, addQuestionToQuizSet, saveQuestion, type QuizSetItem } from './actions'
+import { listCategories, type CategoryItem } from '@/app/admin/actions';
 
 export default function CreateQuestionPage() {
     // form states

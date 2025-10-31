@@ -5,6 +5,24 @@ import { revalidatePath } from 'next/cache';
 import { pool } from '@/lib/db/pool';
 import { redirect } from 'next/navigation';
 
+export type CategoryItem = { id: number; name: string; published: boolean | null }
+
+export async function listCategories(): Promise<CategoryItem[]> {
+    const client = await pool.connect()
+    try {
+        const { rows } = await client.query(
+            `
+            SELECT id, name, COALESCE(published, true) AS published
+            FROM quiz.category
+            ORDER BY parent_id NULLS FIRST, id ASC
+            `
+        )
+        return rows
+    } finally {
+        client.release()
+    }
+}
+
 export async function createCategoryAction(formData: FormData) {
     const name = String(formData.get('name') ?? '').trim();
     const color = String(formData.get('color') ?? '').trim();
@@ -131,6 +149,9 @@ export async function searchQuestions(input: {
     query?: string;
     page?: number;
     pageSize?: number;
+    type?: string;
+    category_id?: number;
+    status?: string;
 }) {
     const query = (input.query ?? '').trim();
     const page = Math.max(1, Number(input.page ?? 1));
@@ -139,10 +160,28 @@ export async function searchQuestions(input: {
 
     const where: string[] = [];
     const params: any[] = [];
+
+    // 기존 키워드 검색
     if (query) {
         params.push(`%${query}%`);
         where.push(`q.stem ILIKE $${params.length}`);
     }
+    // type 필터 추가
+    if (input.type) {
+        params.push(input.type);
+        where.push(`q.type = $${params.length}`);
+    }
+    // category_id 필터 추가
+    if (input.category_id) {
+        params.push(input.category_id);
+        where.push(`q.category_id = $${params.length}`);
+    }
+    // status 필터 추가
+    if (input.status) {
+        params.push(input.status);
+        where.push(`q.status = $${params.length}`);
+    }
+
     const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
 
     const client = await pool.connect();

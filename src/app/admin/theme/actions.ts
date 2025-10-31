@@ -2,51 +2,6 @@
 
 import { pool } from '@/lib/db/pool';
 
-/** 문항 검색 + 페이지네이션 (stem ILIKE) */
-export async function searchQuestions(input: {
-    query?: string;
-    page?: number;
-    pageSize?: number;
-}) {
-    const query = (input.query ?? '').trim();
-    const page = Math.max(1, Number(input.page ?? 1));
-    const pageSize = Math.min(100, Math.max(1, Number(input.pageSize ?? 20)));
-    const offset = (page - 1) * pageSize;
-
-    const where: string[] = [];
-    const params: any[] = [];
-    if (query) {
-        params.push(`%${query}%`);
-        where.push(`q.stem ILIKE $${params.length}`);
-    }
-    const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
-
-    const client = await pool.connect();
-    try {
-        const totalRow = await client.query(
-            `SELECT COUNT(*) FROM quiz.question q ${whereSql}`,
-            params
-        );
-        const total = Number(totalRow.rows[0].count ?? 0);
-
-        params.push(pageSize, offset);
-        const data = await client.query(
-            `
-      SELECT q.id, q.stem, q.category_id, q.difficulty, q.grade, q.language, q.status, q.type
-      FROM quiz.question q
-      ${whereSql}
-      ORDER BY q.id DESC
-      LIMIT $${params.length - 1} OFFSET $${params.length}
-      `,
-            params
-        );
-
-        return { items: data.rows, total, page, pageSize };
-    } finally {
-        client.release();
-    }
-}
-
 /** 세트 저장(정적 세트 + 매핑 벌크 삽입) */
 export async function saveQuizSet(input: {
     title: string;
