@@ -7,7 +7,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <a className="block px-3 py-2 hover:bg-gray-100 rounded" href="/admin">대시보드</a>
                     <a className="block px-3 py-2 hover:bg-gray-100 rounded" href="/admin/questions/list">문제 목록 및 수정</a>
                     <a className="block px-3 py-2 hover:bg-gray-100 rounded" href="/admin/categories/new">카테고리 추가</a>
-                    <a className="block px-3 py-2 hover:bg-gray-100 rounded" href="/admin/today">오늘의 문제</a>
+                    <a className="block px-3 py-2 hover:bg-gray-100 rounded" href="/admin/today">객관식 문제 만들기</a>
+                    <a className="block px-3 py-2 hover:bg-gray-100 rounded" href="/admin/choice">주관식 문제 만들기</a>
                     <a className="block px-3 py-2 hover:bg-gray-100 rounded" href="/admin/theme">퀴즈세트만들기</a>
                 </nav>
             </aside>
