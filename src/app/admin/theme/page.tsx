@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState, useTransition } from 'react';
 import { saveQuizSet } from './actions';
+import Link from "next/link";
 import { searchQuestions, CategoryItem, listCategories } from '@/app/admin/actions';
 
 type Question = {
@@ -283,6 +284,7 @@ export default function QuickSetPage() {
                                 <th className="text-left p-2">난이도</th>
                                 <th className="text-left p-2">학년</th>
                                 <th className="text-left p-2">상태</th>
+                                <th className="text-left p-2">수정</th>
                                 <th className="text-left p-2">선택</th>
                             </tr>
                         </thead>
@@ -301,6 +303,14 @@ export default function QuickSetPage() {
                                         <td className="p-2">{q.difficulty ?? '-'}</td>
                                         <td className="p-2">{q.grade ?? '-'}</td>
                                         <td className="p-2">{q.status ?? '-'}</td>
+                                        <td className="p-2">
+                                            <Link
+                                                className="px-2 py-1 border rounded inline-block"
+                                                href={`/admin/questions/${q.id}`}
+                                            >
+                                                수정
+                                            </Link>
+                                        </td>
                                         <td className="p-2">
                                             <button
                                                 className="px-2 py-1 border rounded disabled:opacity-50"
