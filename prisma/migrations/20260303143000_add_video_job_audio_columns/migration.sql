@@ -1,0 +1,11 @@
+ALTER TABLE quiz.video_job
+ADD COLUMN IF NOT EXISTS narration_enabled BOOLEAN NULL DEFAULT TRUE;
+
+ALTER TABLE quiz.video_job
+ADD COLUMN IF NOT EXISTS sfx_enabled BOOLEAN NULL DEFAULT TRUE;
+
+ALTER TABLE quiz.video_job
+ADD COLUMN IF NOT EXISTS bgm_preset TEXT NULL DEFAULT 'focus';
+
+ALTER TABLE quiz.video_job
+ALTER COLUMN status SET DEFAULT 'created';

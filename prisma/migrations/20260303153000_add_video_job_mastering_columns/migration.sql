@@ -1,0 +1,6 @@
+ALTER TABLE quiz.video_job
+ADD COLUMN IF NOT EXISTS mastering_preset TEXT NULL DEFAULT 'voice_focus';
+
+ALTER TABLE quiz.video_job
+ADD COLUMN IF NOT EXISTS target_lufs DOUBLE PRECISION NULL DEFAULT -16.0;
+

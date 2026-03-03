@@ -99,6 +99,7 @@ model quiz_set {
   created_at         DateTime?           @default(now()) @db.Timestamptz(6)
   updated_at         DateTime?           @default(now()) @db.Timestamptz(6)
   quiz_set_questions quiz_set_question[]
+  video_jobs         video_job[]
 
   @@index([created_by], map: "idx_quiz_set_created_by")
   @@index([status], map: "idx_quiz_set_status")
@@ -117,4 +118,44 @@ model quiz_set_question {
   @@id([quiz_id, question_id])
   @@index([question_id], map: "idx_qsq_question")
   @@index([quiz_id], map: "idx_qsq_quiz")
+}
+
+model video_job {
+  id           BigInt           @id @default(autoincrement())
+  quiz_set_id  BigInt
+  status       String           @default("created")
+  output_path  String?
+  audio_qc_status String?       @default("unknown")
+  tts_provider String?          @default("local")
+  voice_tone   String?          @default("calm")
+  question_rate_pct Int?        @default(100)
+  answer_rate_pct Int?          @default(100)
+  question_pause_ms Int?        @default(300)
+  answer_pause_ms Int?          @default(350)
+  narration_enabled Boolean?    @default(true)
+  sfx_enabled  Boolean?         @default(true)
+  bgm_preset   String?          @default("focus")
+  narration_volume Float?       @default(1)
+  bgm_volume   Float?           @default(0.08)
+  sfx_volume   Float?           @default(1)
+  mastering_preset String?      @default("voice_focus")
+  target_lufs  Float?           @default(-16)
+  created_at   DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime         @default(now()) @db.Timestamptz(6)
+  quiz_set     quiz_set         @relation(fields: [quiz_set_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  artifacts    video_job_file[]
+
+  @@index([quiz_set_id], map: "idx_video_job_quiz_set")
+  @@index([status], map: "idx_video_job_status")
+}
+
+model video_job_file {
+  id          BigInt    @id @default(autoincrement())
+  video_job_id BigInt
+  kind        String    @default("script_json")
+  file_path   String
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
+  video_job   video_job @relation(fields: [video_job_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([video_job_id], map: "idx_video_job_file_job")
 }

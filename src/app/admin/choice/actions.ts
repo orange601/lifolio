@@ -17,23 +17,35 @@ export type SaveMCQQuestionInput = {
   status: 'published' | 'draft';
   category_id: number;
   choices: ChoiceCreateInput[];
-  singleCorrect?: boolean;
 };
 
 export async function saveMCQQuestion(
   input: SaveMCQQuestionInput,
-): Promise<{ success: boolean; id: number }> {
+): Promise<{ success: boolean; id: number; message?: string }> {
   try {
-    if (!input.stem?.trim()) throw new Error('문제를 입력하세요 (stem).');
-    if (!input.category_id) throw new Error('카테고리를 선택하세요.');
-    if (!Array.isArray(input.choices) || input.choices.length < 2) {
-      throw new Error('객관식 보기는 최소 2개 이상이어야 합니다.');
+    if (!input.stem?.trim()) throw new Error('Question is required.');
+    if (!input.category_id) throw new Error('Category is required.');
+    if (!Array.isArray(input.choices) || input.choices.length !== 4) {
+      throw new Error('Exactly 4 choices are required.');
     }
-    const hasCorrect = input.choices.some((c) => !!c.is_correct);
-    if (!hasCorrect) throw new Error('정답으로 표시된 보기가 1개 이상 필요합니다.');
-    if (input.singleCorrect !== false) {
-      const countCorrect = input.choices.filter((c) => c.is_correct).length;
-      if (countCorrect !== 1) throw new Error('단일 정답만 허용됩니다. 정답은 정확히 1개여야 합니다.');
+
+    const normalizedChoices = input.choices.map((choice) => ({
+      ...choice,
+      content: (choice.content ?? '').trim(),
+    }));
+
+    if (normalizedChoices.some((choice) => !choice.content)) {
+      throw new Error('All choices must be non-empty.');
+    }
+
+    const dedup = new Set(normalizedChoices.map((c) => c.content.toLowerCase()));
+    if (dedup.size !== normalizedChoices.length) {
+      throw new Error('Choices must be unique.');
+    }
+
+    const correctCount = normalizedChoices.filter((choice) => choice.is_correct).length;
+    if (correctCount !== 1) {
+      throw new Error('Exactly one correct choice is required.');
     }
 
     const result = await prisma.$transaction(async (tx) => {
@@ -41,11 +53,11 @@ export async function saveMCQQuestion(
         data: {
           category_id: BigInt(input.category_id),
           type: 'MCQ',
-          stem: input.stem,
-          explanation: input.explanation ?? null,
+          stem: input.stem.trim(),
+          explanation: input.explanation?.trim() || null,
           difficulty: input.difficulty ?? null,
-          grade: input.grade ?? 'general',
-          language: input.language ?? 'ko',
+          grade: input.grade || 'general',
+          language: input.language || 'ko',
           status: input.status,
           created_at: new Date(),
           updated_at: new Date(),
@@ -53,23 +65,21 @@ export async function saveMCQQuestion(
       });
 
       await tx.choice.createMany({
-        data: input.choices.map((ch, i) => {
-          const content = (ch.content ?? '').trim();
-          if (!content) throw new Error(`보기 #${i + 1} 내용이 비어 있습니다.`);
-          return {
-            question_id: question.id,
-            content,
-            is_correct: !!ch.is_correct,
-            order_no: ch.order_no != null ? ch.order_no : i + 1,
-          };
-        }),
+        data: normalizedChoices.map((choice, index) => ({
+          question_id: question.id,
+          content: choice.content,
+          is_correct: choice.is_correct,
+          order_no: choice.order_no ?? index + 1,
+        })),
       });
 
-      return { id: Number(question.id) };
+      return question;
     });
 
-    return { success: true, id: result.id };
-  } catch {
-    return { success: false, id: 0 };
+    return { success: true, id: Number(result.id), message: 'Saved.' };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to save question.';
+    return { success: false, id: 0, message };
   }
 }
+
