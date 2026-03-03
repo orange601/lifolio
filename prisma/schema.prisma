@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model app_user {
+  id             BigInt    @id @default(autoincrement())
+  clerk_user_id  String    @unique
+  username       String?
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  last_active_at DateTime? @db.Timestamptz(6)
+}
+
+model attempt {
+  id             BigInt           @id(map: "quiz_attempt_pkey") @default(autoincrement())
+  user_id        String
+  mode           String?          @default("rank_5s")
+  question_cnt   Int              @default(10)
+  score          Int
+  total_time_ms  Int
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  attempt_answer attempt_answer[]
+}
+
+model attempt_answer {
+  id           BigInt    @id @default(autoincrement())
+  attempt_id   BigInt
+  question_id  BigInt?
+  order_no     Int
+  selected_idx Int?
+  correct_idx  Int
+  is_correct   Boolean
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  attempt      attempt   @relation(fields: [attempt_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  question     question? @relation(fields: [question_id], references: [id], onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model category {
+  id          BigInt     @id @default(autoincrement())
+  parent_id   BigInt?
+  name        String
+  slug        String?    @unique
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  description String?    @db.VarChar
+  published   Boolean?
+  questions   question[]
+
+  @@index([parent_id], map: "idx_category_parent")
+}
+
+model choice {
+  id          BigInt   @id @default(autoincrement())
+  question_id BigInt
+  content     String
+  is_correct  Boolean  @default(false)
+  order_no    Int?     @db.SmallInt
+  question    question @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([question_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model question {
+  id                 BigInt              @id @default(autoincrement())
+  type               String?
+  stem               String?
+  explanation        String?
+  difficulty         Int?                @db.SmallInt
+  grade              String?
+  language           String?             @default("ko")
+  status             String?             @default("draft")
+  created_by         String?             @db.Uuid
+  created_at         DateTime?           @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime?           @default(now()) @db.Timestamptz(6)
+  category_id        BigInt?
+  subjective_answer  String?
+  category           category?           @relation(fields: [category_id], references: [id], onUpdate: NoAction)
+  choices            choice[]
+  attempt_answers    attempt_answer[]
+  quiz_set_questions quiz_set_question[]
+
+  @@index([category_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model quiz_set {
+  id                 BigInt              @id @default(autoincrement())
+  title              String
+  description        String?
+  is_random          Boolean?            @default(false)
+  status             String              @default("draft")
+  created_by         String?             @db.Uuid
+  created_at         DateTime?           @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime?           @default(now()) @db.Timestamptz(6)
+  quiz_set_questions quiz_set_question[]
+
+  @@index([created_by], map: "idx_quiz_set_created_by")
+  @@index([status], map: "idx_quiz_set_status")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model quiz_set_question {
+  quiz_id     BigInt
+  question_id BigInt
+  order_no    Int?     @db.SmallInt
+  points      Decimal? @default(1) @db.Decimal(10, 2)
+  quiz_set    quiz_set @relation(fields: [quiz_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  question    question @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([quiz_id, question_id])
+  @@index([question_id], map: "idx_qsq_question")
+  @@index([quiz_id], map: "idx_qsq_quiz")
+}

@@ -13,7 +13,6 @@ type Question = {
     language: string | null;
     status: string | null;
     category_id: number | null;
-    updated_at: string | null;
 };
 
 const PAGE_SIZE = 20;

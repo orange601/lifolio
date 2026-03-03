@@ -1,76 +1,55 @@
-import { pool } from "@/lib/db/pool";
-import { toNum } from "@/utils/number";
+import { prisma } from "@/lib/db/prisma";
 
 export type CreateAttemptAnswerInput = {
-    attemptId: number;
-    questionId?: number | null;
-    orderNo: number;
-    selectedIdx: number | null;
-    correctIdx: number;
-    isCorrect: boolean;
-};
-
-export type AttemptAnswerRowRaw = {
-    id: string;
-    attempt_id: string;
-    question_id: string | null;
-    order_no: number;
-    selected_idx: number | null;
-    correct_idx: number;
-    is_correct: boolean;
-    created_at: Date;
+  attemptId: number;
+  questionId?: number | null;
+  orderNo: number;
+  selectedIdx: number | null;
+  correctIdx: number;
+  isCorrect: boolean;
 };
 
 export type AttemptAnswerEntity = {
-    id: number;
-    attempt_id: number;
-    question_id: number | null;
-    order_no: number;
-    selected_idx: number | null;
-    correct_idx: number;
-    is_correct: boolean;
-    created_at: Date;
+  id: number;
+  attempt_id: number;
+  question_id: number | null;
+  order_no: number;
+  selected_idx: number | null;
+  correct_idx: number;
+  is_correct: boolean;
+  created_at: Date;
 };
 
-// 여러 개 bulk insert
 export async function createMany(
-    items: CreateAttemptAnswerInput[]
+  items: CreateAttemptAnswerInput[],
 ): Promise<AttemptAnswerEntity[]> {
-    if (items.length === 0) return [];
+  if (items.length === 0) return [];
 
-    const values = items
-        .map(
-            (_, i) =>
-                `($${i * 6 + 1}, $${i * 6 + 2}, $${i * 6 + 3}, $${i * 6 + 4}, $${i * 6 + 5}, $${i * 6 + 6})`
-        )
-        .join(",");
+  const data = items.map((item) => ({
+    attempt_id: BigInt(item.attemptId),
+    question_id: item.questionId != null ? BigInt(item.questionId) : null,
+    order_no: item.orderNo,
+    selected_idx: item.selectedIdx,
+    correct_idx: item.correctIdx,
+    is_correct: item.isCorrect,
+  }));
 
-    const sql = `
-    INSERT INTO quiz.attempt_answer 
-      (attempt_id, question_id, order_no, selected_idx, correct_idx, is_correct)
-    VALUES ${values}
-    RETURNING id, attempt_id, question_id, order_no, selected_idx, correct_idx, is_correct, created_at
-  `;
+  await prisma.attempt_answer.createMany({ data });
 
-    const params = items.flatMap((item) => [
-        item.attemptId,
-        item.questionId ?? null,
-        item.orderNo,
-        item.selectedIdx,
-        item.correctIdx,
-        item.isCorrect,
-    ]);
+  // createMany doesn't return records in Prisma, so we fetch them
+  const rows = await prisma.attempt_answer.findMany({
+    where: { attempt_id: BigInt(items[0].attemptId) },
+    orderBy: { order_no: "asc" },
+  });
 
-    const { rows } = await pool.query<AttemptAnswerRowRaw>(sql, params);
-
-    return rows.map((row) => ({
-        id: toNum(row.id)!,
-        attempt_id: toNum(row.attempt_id)!,
-        question_id: row.question_id ? toNum(row.question_id) : null,
-        order_no: row.order_no,
-        selected_idx: row.selected_idx,
-        correct_idx: row.correct_idx,
-        is_correct: row.is_correct,
-        created_at: row.created_at,
-    }));
+  return rows.map((row) => ({
+    id: Number(row.id),
+    attempt_id: Number(row.attempt_id),
+    question_id: row.question_id ? Number(row.question_id) : null,
+    order_no: row.order_no,
+    selected_idx: row.selected_idx,
+    correct_idx: row.correct_idx,
+    is_correct: row.is_correct,
+    created_at: row.created_at ?? new Date(),
+  }));
 }

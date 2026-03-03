@@ -3,7 +3,7 @@ import RankCascader from './components/RankCascader'
 import { findWeeklyTopNWithUsername } from "@/core/repositroy/rank/rank.read.repo";
 
 // 랭킹 샘플 데이터 (WeeklyRankItem 타입)
-export const sampleRankingData = [
+const sampleRankingData = [
     {
         attempt_id: "attempt_001",
         user_id: "user_alex123",

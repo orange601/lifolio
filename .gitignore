@@ -57,3 +57,5 @@ storybook-static/
 # Docker
 docker-compose.override.yml
 *.pid
+
+/src/generated/prisma

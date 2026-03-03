@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState, useTransition } from 'react'
 import { saveMCQQuestion, type ChoiceCreateInput } from './actions'
-import { listQuizSets, addQuestionToQuizSet, type QuizSetItem } from '@/app/admin/today/actions'
+import { listQuizSets, addQuestionToQuizSet, type QuizSetItem } from '@/app/admin/theme/actions'
 import { listCategories, type CategoryItem } from '@/app/admin/actions'
 
 export default function CreateMCQQuestionPage() {
